@@ -1,0 +1,408 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="zh-TW"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="apple-mobile-web-app-capable" content="yes"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="apple-mobile-web-app-title" content="北海道自駕"&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;2025 北海道自駕之旅&lt;/title&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"&gt;&lt;/script&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"&gt;&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* 隱藏滾動條但保留功能 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.no-scrollbar::-webkit-scrollbar { display: none; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* 點擊高亮移除 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { -webkit-tap-highlight-color: transparent; }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* iPhone 安全區域變數 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>:root {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--safe-top: env(safe-area-inset-top);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--safe-bottom: env(safe-area-inset-bottom);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* 內容區塊避開瀏海與底部橫條 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.safe-pt { padding-top: var(--safe-top); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.safe-pb { padding-bottom: var(--safe-bottom); }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* 下拉選單箭頭修正 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>select {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-position: right 0.5rem center;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-repeat: no-repeat;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-size: 1.5em 1.5em;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding-right: 2.5rem;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>-webkit-print-color-adjust: exact;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>appearance: none;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>@keyframes fadeIn {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>from { opacity: 0; transform: translateY(10px); }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>to { opacity: 1; transform: translateY(0); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="bg-slate-50 text-slate-900 font-sans antialiased"&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="root"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="min-h-screen flex flex-col items-center justify-center text-slate-400 space-y-4 safe-pb"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="w-10 h-10 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="text-sm font-medium"&gt;正在載入北海道行程...&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script type="text/babel"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const { useState, useEffect } = React;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Icons (SVG Components) ---</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const Hotel = ({ className }) =&gt; &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}&gt;&lt;path d="M3 21h18"/&gt;&lt;path d="M5 21V7l8-4 8 4v14"/&gt;&lt;path d="M9 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/&gt;&lt;path d="M9 21v-5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5"/&gt;&lt;/svg&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const Utensils = ({ className }) =&gt; &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}&gt;&lt;path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/&gt;&lt;path d="M7 2v20"/&gt;&lt;path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/&gt;&lt;/svg&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const Car = ({ className }) =&gt; &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}&gt;&lt;path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/&gt;&lt;circle cx="7" cy="17" r="2"/&gt;&lt;circle cx="17" cy="17" r="2"/&gt;&lt;path d="M14 17h-2"/&gt;&lt;/svg&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const MapPin = ({ className }) =&gt; &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}&gt;&lt;path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/&gt;&lt;circle cx="12" cy="10" r="3"/&gt;&lt;/svg&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const Navigation = ({ className }) =&gt; &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}&gt;&lt;polygon points="3 11 22 2 13 21 11 13 3 11"/&gt;&lt;/svg&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const ArrowLeft = ({ className }) =&gt; &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}&gt;&lt;path d="m12 19-7-7 7-7"/&gt;&lt;path d="M19 12H5"/&gt;&lt;/svg&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const Snowflake = ({ className }) =&gt; &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}&gt;&lt;line x1="2" x2="22" y1="12" y2="12"/&gt;&lt;line x1="12" x2="12" y1="2" y2="22"/&gt;&lt;path d="m20 20-4-4"/&gt;&lt;path d="m4 4 4 4"/&gt;&lt;path d="m4 20 4-4"/&gt;&lt;path d="m20 4-4 4"/&gt;&lt;/svg&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const PlaneIcon = ({ className }) =&gt; &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}&gt;&lt;path d="M2 12h20"/&gt;&lt;path d="M13 2l9 10-9 10"/&gt;&lt;path d="M2 12l5-5m0 10l-5-5"/&gt;&lt;/svg&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const TreeIcon = ({ className }) =&gt; &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}&gt;&lt;path d="M12 2L3 14h5v8h8v-8h5L12 2z"/&gt;&lt;/svg&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const ShoppingBag = ({ className }) =&gt; &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}&gt;&lt;path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/&gt;&lt;line x1="3" x2="21" y1="6" y2="6"/&gt;&lt;path d="M16 10a4 4 0 0 1-8 0"/&gt;&lt;/svg&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const HotSpring = ({ className }) =&gt; &lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}&gt;&lt;path d="m4 10 2.5 2.5"/&gt;&lt;path d="m7 10 2.5 2.5"/&gt;&lt;path d="m10 10 2.5 2.5"/&gt;&lt;path d="M12 2v2"/&gt;&lt;path d="M12 18v2"/&gt;&lt;path d="M16 4v16"/&gt;&lt;path d="M20 4v16"/&gt;&lt;path d="M8 14v6"/&gt;&lt;path d="M4 14v6"/&gt;&lt;/svg&gt;; // Simplified representation</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Data (北海道詳細行程) ---</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const itineraryData = [</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: "2025-12-22",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>city: "Sapporo",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>hotel: "Quintessa Hotel Sapporo",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>activities: [</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "09:00", type: "transit", name: "TSA 松山機場起飛", notes: "✈️ JL0096 (JAL) / 行李: 2件" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "13:00", type: "transit", name: "抵達東京羽田 (HND)", notes: "⚠️ 需入境領行李 ➔ 轉國內線掛行李 (T3 -&gt; T1)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "15:30", type: "transit", name: "HND 羽田起飛", notes: "✈️ JL0521 (國內線)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "17:05", type: "transit", name: "抵達新千歲 (CTS)", notes: "分秒必爭！派人先衝租車櫃台" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "17:30", type: "transit", name: "SUZUKI 租車取車", notes: "★ 訂單: JS2501896 (國內線櫃台) / 18:00前務必抵達" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Drive", type: "transit", name: "前往札幌市區", notes: "車程約 1 小時 (注意雪地駕駛)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Check-in", type: "hotel", name: "Quintessa Hotel Sapporo", notes: "★ 訂單: 6840839171 (PIN: 4589) / 確認停車位" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Dinner", type: "dinner", name: "札幌湯咖哩", notes: "飯店附近：Suage+ 或 Samurai" }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">          </span>},</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: "2025-12-23",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>city: "Sapporo",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>hotel: "Quintessa Hotel Sapporo",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>activities: [</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "09:30", type: "sightseeing", name: "Snow Cruise ONZE", notes: "🎿 滑雪囉! (訂單: 251108075341000650) / 海景滑雪場" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "15:30", type: "transit", name: "滑雪結束 / 返回札幌", notes: "🚗 車程約 40 分" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Dinner", type: "dinner", name: "薄野 (Susukino)", notes: "拉麵橫丁或居酒屋" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Shopping", type: "shopping", name: "唐吉訶德 / 藥妝", notes: "狸小路逛街" }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">          </span>},</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: "2025-12-24",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>city: "Sapporo",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>hotel: "Quintessa Hotel Sapporo",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>activities: [</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "09:30", type: "sightseeing", name: "Snow Cruise ONZE", notes: "🎿 Day 2 滑雪 (訂單: 251108075341000650)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "15:05", type: "transit", name: "第二批人員抵達", notes: "✈️ JL3107 抵達新千歲" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "16:30", type: "transit", name: "第二批前往飯店", notes: "🚆 搭 JR 快速 Airport 至札幌站 ➔ 轉車至飯店" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "17:30", type: "hotel", name: "全員飯店會合", notes: "Quintessa Hotel / ⚠️第二駕駛建議之後再補辦" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Dinner", type: "dinner", name: "聖誕晚餐", notes: "慶祝全員到齊！(餐廳或聖誕市集)" }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">          </span>},</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: "2025-12-25",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>city: "Sapporo",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>hotel: "Quintessa &amp; LIT'S INN",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>activities: [</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "10:30", type: "transit", name: "退房 / 出發", notes: "🚗 前往三井 Outlet (行李全上車)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "11:10", type: "shopping", name: "三井 Outlet 北廣島", notes: "逛街吃午餐 (室內型避寒)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "13:40", type: "transit", name: "前往新千歲機場", notes: "🚗 接機 / ⚠️ 注意行李空間" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "14:20", type: "transit", name: "第三批人員抵達", notes: "✈️ 星宇 JX850 (T1 09:20起飛)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "15:10", type: "transit", name: "國際線接機", notes: "入境約需 50 分 / 建議停 B 停車場" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "16:30", type: "hotel", name: "LIT'S INN Sapporo", notes: "🟢 全員到齊 / 辦理入住" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "17:30", type: "sightseeing", name: "慕尼黑聖誕市集", notes: "🎄 大通公園 2丁目 (最後一晚! 至 21:00)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "18:30", type: "sightseeing", name: "白色燈樹節", notes: "✨ White Illumination (大通 1-6丁目)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Dinner", type: "dinner", name: "聖誕晚餐", notes: "市集小吃 or 薄野大餐" }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">          </span>},</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: "2025-12-26",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>city: "Sapporo",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>hotel: "Quintessa &amp; LIT'S INN",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>activities: [</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "08:30", type: "lunch", name: "二條市場", notes: "早餐吃豪華海鮮丼 / 購買乾貨" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "09:45", type: "sightseeing", name: "北海道大學", notes: "🏫 克拉克像 / 白雪校園散策 (需停正門外)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "11:00", type: "sightseeing", name: "北海道神宮", notes: "⛩️ 雪中參拜 / 必吃六花亭判官餅" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "12:30", type: "sightseeing", name: "白色戀人公園", notes: "🍪 歐風城堡拍照 / 園區內午餐" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "15:30", type: "transit", name: "前往藻岩山", notes: "🚗 提早出發避開下班車潮" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "16:00", type: "sightseeing", name: "藻岩山夜景", notes: "🚠 必看! 日本新三大夜景 (日落前抵達)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "18:30", type: "sightseeing", name: "札幌電視塔", notes: "🗼 俯瞰大通公園夜景" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Dinner", type: "dinner", name: "札幌市區晚餐", notes: "成吉思汗烤肉 / 螃蟹料理" }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">          </span>},</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: "2025-12-27",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>city: "Otaru",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>hotel: "STAY's OTARU",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>activities: [</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "10:00", type: "transit", name: "退房 / 出發小樽", notes: "🚗 札樽道約 50 分鐘" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "11:00", type: "hotel", name: "STAY's OTARU", notes: "辦理入住或先寄放行李 / 附設停車場" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "12:30", type: "lunch", name: "三角市場", notes: "午餐：海鮮丼 (武田鮮魚店/滝波食堂)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "14:00", type: "sightseeing", name: "小樽音樂盒博物館本館", notes: "🎵 沿堺町通開始步行" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "15:00", type: "shopping", name: "六花亭 / 北菓樓", notes: "購買伴手禮 / 夢不思議泡芙 / 葡萄奶油夾心" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "16:00", type: "sightseeing", name: "LeTAO Pathos", notes: "🍰 適合坐下來喝下午茶、休息避寒" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "17:30", type: "sightseeing", name: "出拔小路", notes: "拍照 / 小吃點心，走到運河邊" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "18:00", type: "sightseeing", name: "小樽運河 (點燈夜景)", notes: "📸 必拍！淺草橋拍攝點" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "19:00", type: "sightseeing", name: "天狗山夜景", notes: "🚠 開車上山到纜車站 (視雪況而定)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Dinner", type: "dinner", name: "小樽市區晚餐", notes: "推薦：若雞時代 (炸半雞) 或政壽司" }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">          </span>},</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: "2025-12-28",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>city: "Shiraoi",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>hotel: "Hoshino Resorts KAI Poroto",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>activities: [</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "10:00", type: "sightseeing", name: "朝里車站", notes: "🚞 臨海無人車站 / 順路拍照" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "11:30", type: "shopping", name: "三井 Outlet Park", notes: "🛍️ 北廣島 (順路南下，高速公路旁)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Lunch", type: "lunch", name: "Outlet 內用餐", notes: "美食廣場解決午餐" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "14:00", type: "transit", name: "前往星野 界 波羅多", notes: "🚗 車程約 1 小時 20 分 (走高速公路)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "15:30", type: "hotel", name: "星野集團 界 波羅多", notes: "★ Check-in / 享受湖畔摩爾溫泉" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Dinner", type: "dinner", name: "飯店晚餐", notes: "🍱 北海道季節懷石料理" }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">          </span>},</p>
+<p class="p1"><span class="Apple-converted-space">          </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: "2025-12-29",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>city: "Chitose",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>hotel: "",</p>
+<p class="p1"><span class="Apple-converted-space">            </span>activities: [</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "Morning", type: "hotel", name: "界 波羅多晨間活動", notes: "♨️ 泡溫泉 / 湖畔散步" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "10:30", type: "transit", name: "前往新千歲機場", notes: "🚗 車程約 50 分鐘" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "11:30", type: "transit", name: "加油 &amp; 租車公司還車", notes: "🏁 SUZUKI 櫃台在國內線航廈" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "12:00", type: "shopping", name: "機場國內線航廈", notes: "🛍️ 最後採買 (哆啦A夢/Royce/六花亭)" },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ time: "13:00", type: "transit", name: "國際線櫃台報到", notes: "⏰ 預留充裕時間" }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 城市/區域配色 (針對北海道調整為雪國色系)</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const cityColors = {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Sapporo: "bg-blue-100 text-blue-800 border-blue-200",</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Otaru: "bg-cyan-100 text-cyan-800 border-cyan-200",</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Shiraoi: "bg-stone-100 text-stone-800 border-stone-200", // 溫泉質感</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Chitose: "bg-slate-100 text-slate-800 border-slate-200",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const cityBadges = {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Sapporo: "❄️ 札幌",</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Otaru: "🌊 小樽",</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Shiraoi: "♨️ 白老",</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Chitose: "✈️ 千歲",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function HokkaidoTripApp() {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const [filterCity, setFilterCity] = useState('All');</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const [selectedDate, setSelectedDate] = useState(null);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const filteredData = filterCity === 'All'<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>? itineraryData<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>: itineraryData.filter(item =&gt; item.city === filterCity);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const scrollToDate = (date) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const element = document.getElementById(`date-${date}`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (element) {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const headerOffset = 120; // Adjust for sticky header</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const elementPosition = element.getBoundingClientRect().top;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const offsetPosition = elementPosition + window.pageYOffset - headerOffset;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>window.scrollTo({ top: offsetPosition, behavior: "smooth" });</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>setSelectedDate(date);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const openMap = (query) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const url = `https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(query)}`;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>window.open(url, '_blank');</p>
+<p class="p1"><span class="Apple-converted-space">          </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>return (</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-24 max-w-md mx-auto shadow-2xl border-x border-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{/* Header */}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm border-b border-slate-200 safe-pt"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="px-4 py-3 flex justify-between items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h1 className="text-xl font-extrabold text-slate-800 flex items-center gap-2 tracking-tight"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;Snowflake className="w-6 h-6 text-cyan-500" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>北海道自駕之旅</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-xs text-slate-500 font-medium ml-0.5 mt-0.5"&gt;2025/12/22 - 12/29&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                  </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>{/* Dropdown Filter */}</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="relative"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;select<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>value={filterCity}<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>onChange={(e) =&gt; setFilterCity(e.target.value)}</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>className="appearance-none bg-slate-100 border border-transparent hover:border-slate-300 rounded-full pl-4 pr-8 py-2 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-cyan-500 focus:outline-none cursor-pointer transition-all"</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;option value="All"&gt;全部行程&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;option value="Sapporo"&gt;❄️ 札幌&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;option value="Otaru"&gt;🌊 小樽&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;option value="Shiraoi"&gt;♨️ 白老&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>{/* Date Scroller */}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="overflow-x-auto flex gap-2 px-4 py-3 no-scrollbar bg-white/95 border-t border-slate-50"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{filteredData.map((day) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>const dateObj = new Date(day.date);</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>const dayNum = dateObj.getDate();</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>const isSelected = selectedDate === day.date;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                       </span>return (</p>
+<p class="p1"><span class="Apple-converted-space">                         </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                           </span>key={day.date}</p>
+<p class="p1"><span class="Apple-converted-space">                           </span>onClick={() =&gt; scrollToDate(day.date)}</p>
+<p class="p1"><span class="Apple-converted-space">                           </span>className={`flex flex-col items-center justify-center min-w-[3.6rem] h-14 rounded-2xl transition-all duration-200 border flex-shrink-0 ${</p>
+<p class="p1"><span class="Apple-converted-space">                             </span>isSelected<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                               </span>? 'bg-cyan-600 text-white shadow-md scale-105 border-cyan-600'<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                               </span>: 'bg-white text-slate-500 border-slate-100 hover:border-slate-200'</p>
+<p class="p1"><span class="Apple-converted-space">                           </span>}`}</p>
+<p class="p1"><span class="Apple-converted-space">                         </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                           </span>&lt;span className={`text-[10px] font-bold uppercase tracking-wider ${isSelected ? 'text-cyan-100' : 'text-slate-400'}`}&gt;{dayName}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                           </span>&lt;span className="text-lg font-bold leading-none mt-0.5"&gt;{dayNum}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                         </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>})}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>{/* Main Content */}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="px-4 pt-6 space-y-10"&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>{filteredData.map((day) =&gt; (</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div key={day.date} id={`date-${day.date}`} className="relative animate-fadeIn"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{/* Date Header */}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div className="flex items-center gap-3 mb-5 sticky top-32 z-30 bg-slate-50/95 py-3 backdrop-blur-sm border-b border-slate-100/50"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div className={`px-3 py-1 rounded-full text-xs font-bold border shadow-sm ${cityColors[day.city] || "bg-gray-100"}`}&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>{cityBadges[day.city] || day.city}</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;h2 className="text-xl font-bold text-slate-800"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>{new Date(day.date).toLocaleDateString('zh-TW', { month: 'long', day: 'numeric' })}</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{/* Hotel Info */}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{day.hotel &amp;&amp; (</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>&lt;div className="mb-6 bg-white rounded-2xl p-4 flex items-start gap-4 border border-cyan-50 shadow-sm ring-1 ring-cyan-100/50"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>&lt;div className="bg-cyan-50 p-2 rounded-full text-cyan-600 shrink-0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;Hotel className="w-5 h-5" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>&lt;div className="flex-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div className="text-[10px] text-cyan-500 font-bold uppercase tracking-wider mb-0.5"&gt;住宿&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div className="text-sm font-bold text-slate-900 leading-snug"&gt;{day.hotel}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;button<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                              </span>onClick={() =&gt; openMap(day.hotel + " " + day.city)}</p>
+<p class="p1"><span class="Apple-converted-space">                              </span>className="text-xs font-semibold text-cyan-600 mt-2 flex items-center gap-1 hover:text-cyan-800 bg-cyan-50 px-2 py-1 rounded-md w-fit transition-colors"</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                              </span>導航 &lt;Navigation className="w-3 h-3 inline" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>)}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{/* Timeline */}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div className="relative border-l-2 border-slate-200 ml-4 space-y-8 pb-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>{day.activities.map((activity, actIndex) =&gt; (</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div key={actIndex} className="relative pl-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>{/* Timeline Dot */}</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>&lt;div className={`absolute -left-[9px] top-4 w-4 h-4 rounded-full border-[3px] border-slate-50 shadow-sm z-10 ${</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>activity.type === 'dinner' || activity.type === 'lunch' ? 'bg-orange-400' :<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                            </span>activity.type === 'transit' ? 'bg-slate-500' : 'bg-cyan-500'</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>}`}&gt;&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                          </span></p>
+<p class="p1"><span class="Apple-converted-space">                          </span>{/* Card */}</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>&lt;div<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                            </span>onClick={() =&gt; openMap(activity.name + " " + day.city)}</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>className="bg-white rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-slate-100 hover:shadow-md transition-all cursor-pointer active:scale-[0.98] active:bg-slate-50"</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div className="flex justify-between items-center mb-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                               </span>&lt;span className={`text-[10px] font-bold px-2 py-1 rounded-md text-white shadow-sm ${</p>
+<p class="p1"><span class="Apple-converted-space">                                 </span>activity.type === 'dinner' || activity.type === 'lunch' ? 'bg-orange-400' :<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                                 </span>activity.type === 'transit' ? 'bg-slate-500' : 'bg-cyan-500'</p>
+<p class="p1"><span class="Apple-converted-space">                               </span>}`}&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                 </span>{activity.time}</p>
+<p class="p1"><span class="Apple-converted-space">                               </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                               </span>&lt;span className="text-slate-400"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                 </span>{(activity.name.includes("慕尼黑") || activity.name.includes("燈樹")) &amp;&amp; &lt;TreeIcon className="w-4 h-4" /&gt;}</p>
+<p class="p1"><span class="Apple-converted-space">                                 </span>{(activity.name.includes("起飛") || activity.name.includes("抵達")) &amp;&amp; &lt;PlaneIcon className="w-4 h-4" /&gt;}</p>
+<p class="p1"><span class="Apple-converted-space">                                 </span>{activity.type === 'transit' &amp;&amp; !activity.name.includes("起飛") &amp;&amp; &lt;Car className="w-4 h-4" /&gt;}</p>
+<p class="p1"><span class="Apple-converted-space">                                 </span>{(activity.type === 'lunch' || activity.type === 'dinner') &amp;&amp; &lt;Utensils className="w-4 h-4" /&gt;}</p>
+<p class="p1"><span class="Apple-converted-space">                                 </span>{(activity.type === 'sightseeing' || activity.type === 'shopping') &amp;&amp; !activity.name.includes("慕尼黑") &amp;&amp; &lt;MapPin className="w-4 h-4" /&gt;}</p>
+<p class="p1"><span class="Apple-converted-space">                                 </span>{activity.type === 'hotel' &amp;&amp; &lt;Hotel className="w-4 h-4" /&gt;}</p>
+<p class="p1"><span class="Apple-converted-space">                               </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                            </span></p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h3 className="font-bold text-slate-800 text-base mb-1.5 leading-snug"&gt;{activity.name}&lt;/h3&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                            </span></p>
+<p class="p1"><span class="Apple-converted-space">                            </span>{activity.notes &amp;&amp; (</p>
+<p class="p1"><span class="Apple-converted-space">                              </span>&lt;div className="bg-slate-50 rounded-lg p-2.5 mt-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p className="text-xs text-slate-600 font-medium leading-relaxed"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                  </span>{activity.notes}</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                              </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>)}</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>))}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>))}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>{/* Footer */}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="text-center text-slate-400 text-xs font-medium pt-8 pb-12"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;p&gt;Safe Driving in Hokkaido! 🚗❄️&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>{/* FAB */}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;button<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>onClick={() =&gt; window.scrollTo({ top: 0, behavior: 'smooth' })}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>className="fixed bottom-8 right-6 bg-slate-900/90 text-white p-3.5 rounded-full shadow-xl hover:bg-black transition-all z-40 active:scale-90 backdrop-blur-sm mb-safe safe-pb"</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;ArrowLeft className="w-6 h-6 rotate-90" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const root = ReactDOM.createRoot(document.getElementById('root'));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>root.render(&lt;HokkaidoTripApp /&gt;);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
