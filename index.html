@@ -17,24 +17,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
 
     <style>
-        /* 隱藏滾動條但保留功能 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* 點擊高亮移除 */
         body { -webkit-tap-highlight-color: transparent; }
-        
-        /* iPhone 安全區域變數 */
-        :root {
-            --safe-top: env(safe-area-inset-top);
-            --safe-bottom: env(safe-area-inset-bottom);
-        }
-
-        /* 內容區塊避開瀏海與底部橫條 */
+        :root { --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom); }
         .safe-pt { padding-top: var(--safe-top); }
         .safe-pb { padding-bottom: var(--safe-bottom); }
-        
-        /* 下拉選單箭頭修正 */
         select {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
             background-position: right 0.5rem center;
@@ -44,27 +32,26 @@
             -webkit-print-color-adjust: exact;
             appearance: none;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
+        
+        /* Checkbox Style */
+        .checkbox-wrapper input:checked + div { background-color: #06b6d4; border-color: #06b6d4; }
+        .checkbox-wrapper input:checked + div svg { display: block; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased">
-    
     <div id="root">
         <div class="min-h-screen flex flex-col items-center justify-center text-slate-400 space-y-4 safe-pb">
             <div class="w-10 h-10 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-            <p class="text-sm font-medium">正在載入北海道行程...</p>
+            <p class="text-sm font-medium">正在載入購物助手...</p>
         </div>
     </div>
 
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- Icons (SVG Components) ---
+        // Icons
         const Hotel = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M9 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/><path d="M9 21v-5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5"/></svg>;
         const Utensils = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>;
         const Car = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M14 17h-2"/></svg>;
@@ -74,24 +61,29 @@
         const Snowflake = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="2" x2="22" y1="12" y2="12"/><line x1="12" x2="12" y1="2" y2="22"/><path d="m20 20-4-4"/><path d="m4 4 4 4"/><path d="m4 20 4-4"/><path d="m20 4-4 4"/></svg>;
         const PlaneIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 12h20"/><path d="M13 2l9 10-9 10"/><path d="M2 12l5-5m0 10l-5-5"/></svg>;
         const TreeIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 2L3 14h5v8h8v-8h5L12 2z"/></svg>;
-        const ShoppingBag = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>;
-        const HotSpring = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m4 10 2.5 2.5"/><path d="m7 10 2.5 2.5"/><path d="m10 10 2.5 2.5"/><path d="M12 2v2"/><path d="M12 18v2"/><path d="M16 4v16"/><path d="M20 4v16"/><path d="M8 14v6"/><path d="M4 14v6"/></svg>; 
+        const MoneyIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>;
+        const SettingsIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>;
+        const ExternalLink = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>;
+        const ShoppingBagIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>;
+        const PlusIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M5 12h14"/><path d="M12 5v14"/></svg>;
+        const TrashIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>;
+        const CheckIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="20 6 9 17 4 12"/></svg>;
 
-        // --- Data (北海道詳細行程) ---
+        // 行程資料
         const itineraryData = [
           {
             date: "2025-12-22",
             city: "Sapporo",
             hotel: "Quintessa Hotel Sapporo",
             activities: [
-              { time: "09:00", type: "transit", name: "TSA 松山機場起飛", notes: "✈️ JL0096 (JAL) / 行李: 2件" },
-              { time: "13:00", type: "transit", name: "抵達東京羽田 (HND)", notes: "⚠️ 需入境領行李 ➔ 轉國內線掛行李 (T3 -> T1)" },
-              { time: "15:30", type: "transit", name: "HND 羽田起飛", notes: "✈️ JL0521 (國內線)" },
-              { time: "17:05", type: "transit", name: "抵達新千歲 (CTS)", notes: "分秒必爭！派人先衝租車櫃台" },
-              { time: "17:30", type: "transit", name: "SUZUKI 租車取車", notes: "★ 訂單: JS2501896 (國內線櫃台) / 18:00前務必抵達" },
-              { time: "Drive", type: "transit", name: "前往札幌市區", notes: "車程約 1 小時 (注意雪地駕駛)" },
-              { time: "Check-in", type: "hotel", name: "Quintessa Hotel Sapporo", notes: "★ 訂單: 6840839171 (PIN: 4589) / 確認停車位" },
-              { time: "Dinner", type: "dinner", name: "札幌湯咖哩", notes: "飯店附近：Suage+ 或 Samurai" }
+              { id: "d1-1", time: "09:00", type: "transit", name: "TSA 松山機場起飛", notes: "✈️ JL0096 (JAL) / 行李: 2件" },
+              { id: "d1-2", time: "13:00", type: "transit", name: "抵達東京羽田 (HND)", notes: "⚠️ 需入境領行李 ➔ 轉國內線掛行李 (T3 -> T1)" },
+              { id: "d1-3", time: "15:30", type: "transit", name: "HND 羽田起飛", notes: "✈️ JL0521 (國內線)" },
+              { id: "d1-4", time: "17:05", type: "transit", name: "抵達新千歲 (CTS)", notes: "分秒必爭！派人先衝租車櫃台" },
+              { id: "d1-5", time: "17:30", type: "transit", name: "SUZUKI 租車取車", notes: "★ 訂單: JS2501896 (國內線櫃台) / 18:00前務必抵達" },
+              { id: "d1-6", time: "Drive", type: "transit", name: "前往札幌市區", notes: "車程約 1 小時 (注意雪地駕駛)" },
+              { id: "d1-7", time: "Check-in", type: "hotel", name: "Quintessa Hotel Sapporo", notes: "★ 訂單: 6840839171 (PIN: 4589) / 確認停車位" },
+              { id: "d1-8", time: "Dinner", type: "dinner", name: "札幌湯咖哩", notes: "飯店附近：Suage+ 或 Samurai" }
             ]
           },
           {
@@ -99,10 +91,10 @@
             city: "Sapporo",
             hotel: "Quintessa Hotel Sapporo",
             activities: [
-              { time: "09:30", type: "sightseeing", name: "Snow Cruise ONZE", notes: "🎿 滑雪囉! (訂單: 251108075341000650) / 海景滑雪場" },
-              { time: "15:30", type: "transit", name: "滑雪結束 / 返回札幌", notes: "🚗 車程約 40 分" },
-              { time: "Dinner", type: "dinner", name: "薄野 (Susukino)", notes: "拉麵橫丁或居酒屋" },
-              { time: "Shopping", type: "shopping", name: "唐吉訶德 / 藥妝", notes: "狸小路逛街" }
+              { id: "d2-1", time: "09:30", type: "sightseeing", name: "Snow Cruise ONZE", notes: "🎿 滑雪囉! (訂單: 251108075341000650) / 海景滑雪場" },
+              { id: "d2-2", time: "15:30", type: "transit", name: "滑雪結束 / 返回札幌", notes: "🚗 車程約 40 分" },
+              { id: "d2-3", time: "Dinner", type: "dinner", name: "薄野 (Susukino)", notes: "拉麵橫丁或居酒屋" },
+              { id: "d2-4", time: "Shopping", type: "shopping", name: "唐吉訶德 / 藥妝", notes: "狸小路逛街" }
             ]
           },
           {
@@ -110,11 +102,11 @@
             city: "Sapporo",
             hotel: "Quintessa Hotel Sapporo",
             activities: [
-              { time: "09:30", type: "sightseeing", name: "Snow Cruise ONZE", notes: "🎿 Day 2 滑雪 (訂單: 251108075341000650)" },
-              { time: "15:05", type: "transit", name: "Simon抵達", notes: "✈️ JL3107 抵達新千歲" },
-              { time: "16:30", type: "transit", name: "Simon前往飯店", notes: "🚆 搭 JR 快速 Airport 至札幌站 ➔ 轉車至飯店" },
-              { time: "17:30", type: "hotel", name: "全員飯店會合", notes: "Quintessa Hotel / ⚠️會先去登記租車保險再去飯店" },
-              { time: "Dinner", type: "dinner", name: "聖誕晚餐", notes: "慶祝全員到齊！(餐廳或聖誕市集)" }
+              { id: "d3-1", time: "09:30", type: "sightseeing", name: "Snow Cruise ONZE", notes: "🎿 Day 2 滑雪 (訂單: 251108075341000650)" },
+              { id: "d3-2", time: "15:05", type: "transit", name: "第二批人員抵達", notes: "✈️ JL3107 抵達新千歲" },
+              { id: "d3-3", time: "16:30", type: "transit", name: "第二批前往飯店", notes: "🚆 搭 JR 快速 Airport 至札幌站 ➔ 轉車至飯店" },
+              { id: "d3-4", time: "17:30", type: "hotel", name: "全員飯店會合", notes: "Quintessa Hotel / ⚠️第二駕駛建議之後再補辦" },
+              { id: "d3-5", time: "Dinner", type: "dinner", name: "聖誕晚餐", notes: "慶祝全員到齊！(餐廳或聖誕市集)" }
             ]
           },
           {
@@ -122,15 +114,15 @@
             city: "Sapporo",
             hotel: "Quintessa & LIT'S INN",
             activities: [
-              { time: "10:30", type: "transit", name: "退房 / 出發", notes: "🚗 前往三井 Outlet (行李全上車)" },
-              { time: "11:10", type: "shopping", name: "三井 Outlet 北廣島", notes: "逛街吃午餐 (室內型避寒)" },
-              { time: "13:40", type: "transit", name: "前往新千歲機場", notes: "🚗 接機 / ⚠️ 注意行李空間" },
-              { time: "14:20", type: "transit", name: "爸爸媽媽抵達", notes: "✈️ 星宇 JX850 (T1 09:20起飛)" },
-              { time: "15:10", type: "transit", name: "國際線接機", notes: "入境約需 50 分 / 建議停 B 停車場" },
-              { time: "16:30", type: "hotel", name: "LIT'S INN Sapporo", notes: "🟢 全員到齊 / 辦理入住" },
-              { time: "17:30", type: "sightseeing", name: "慕尼黑聖誕市集", notes: "🎄 大通公園 2丁目 (最後一晚! 至 21:00)" },
-              { time: "18:30", type: "sightseeing", name: "白色燈樹節", notes: "✨ White Illumination (大通 1-6丁目)" },
-              { time: "Dinner", type: "dinner", name: "聖誕晚餐", notes: "市集小吃 or 薄野大餐" }
+              { id: "d4-1", time: "10:30", type: "transit", name: "退房 / 出發", notes: "🚗 前往三井 Outlet (行李全上車)" },
+              { id: "d4-2", time: "11:10", type: "shopping", name: "三井 Outlet 北廣島", notes: "逛街吃午餐 (室內型避寒)" },
+              { id: "d4-3", time: "13:40", type: "transit", name: "前往新千歲機場", notes: "🚗 接機 / ⚠️ 注意行李空間" },
+              { id: "d4-4", time: "14:20", type: "transit", name: "第三批人員抵達", notes: "✈️ 星宇 JX850 (T1 09:20起飛)" },
+              { id: "d4-5", time: "15:10", type: "transit", name: "國際線接機", notes: "入境約需 50 分 / 建議停 B 停車場" },
+              { id: "d4-6", time: "16:30", type: "hotel", name: "LIT'S INN Sapporo", notes: "🟢 全員到齊 / 辦理入住" },
+              { id: "d4-7", time: "17:30", type: "sightseeing", name: "慕尼黑聖誕市集", notes: "🎄 大通公園 2丁目 (最後一晚! 至 21:00)" },
+              { id: "d4-8", time: "18:30", type: "sightseeing", name: "白色燈樹節", notes: "✨ White Illumination (大通 1-6丁目)" },
+              { id: "d4-9", time: "Dinner", type: "dinner", name: "聖誕晚餐", notes: "市集小吃 or 薄野大餐" }
             ]
           },
           {
@@ -138,14 +130,14 @@
             city: "Sapporo",
             hotel: "Quintessa & LIT'S INN",
             activities: [
-              { time: "08:30", type: "lunch", name: "二條市場", notes: "早餐吃豪華海鮮丼 / 購買乾貨" },
-              { time: "09:45", type: "sightseeing", name: "北海道大學", notes: "🏫 克拉克像 / 白雪校園散策 (需停正門外)" },
-              { time: "11:00", type: "sightseeing", name: "北海道神宮", notes: "⛩️ 雪中參拜 / 必吃六花亭判官餅" },
-              { time: "12:30", type: "sightseeing", name: "白色戀人公園", notes: "🍪 歐風城堡拍照 / 園區內午餐" },
-              { time: "15:30", type: "transit", name: "前往藻岩山", notes: "🚗 提早出發避開下班車潮" },
-              { time: "16:00", type: "sightseeing", name: "藻岩山夜景", notes: "🚠 必看! 日本新三大夜景 (日落前抵達)" },
-              { time: "18:30", type: "sightseeing", name: "札幌電視塔", notes: "🗼 俯瞰大通公園夜景" },
-              { time: "Dinner", type: "dinner", name: "札幌市區晚餐", notes: "成吉思汗烤肉 / 螃蟹料理" }
+              { id: "d5-1", time: "08:30", type: "lunch", name: "二條市場", notes: "早餐吃豪華海鮮丼 / 購買乾貨" },
+              { id: "d5-2", time: "09:45", type: "sightseeing", name: "北海道大學", notes: "🏫 克拉克像 / 白雪校園散策 (需停正門外)" },
+              { id: "d5-3", time: "11:00", type: "sightseeing", name: "北海道神宮", notes: "⛩️ 雪中參拜 / 必吃六花亭判官餅" },
+              { id: "d5-4", time: "12:30", type: "sightseeing", name: "白色戀人公園", notes: "🍪 歐風城堡拍照 / 園區內午餐" },
+              { id: "d5-5", time: "15:30", type: "transit", name: "前往藻岩山", notes: "🚗 提早出發避開下班車潮" },
+              { id: "d5-6", time: "16:00", type: "sightseeing", name: "藻岩山夜景", notes: "🚠 必看! 日本新三大夜景 (日落前抵達)" },
+              { id: "d5-7", time: "18:30", type: "sightseeing", name: "札幌電視塔", notes: "🗼 俯瞰大通公園夜景" },
+              { id: "d5-8", time: "Dinner", type: "dinner", name: "札幌市區晚餐", notes: "成吉思汗烤肉 / 螃蟹料理" }
             ]
           },
           {
@@ -153,16 +145,16 @@
             city: "Otaru",
             hotel: "STAY's OTARU",
             activities: [
-              { time: "10:00", type: "transit", name: "退房 / 出發小樽", notes: "🚗 札樽道約 50 分鐘" },
-              { time: "11:00", type: "hotel", name: "STAY's OTARU", notes: "辦理入住或先寄放行李 / 附設停車場" },
-              { time: "12:30", type: "lunch", name: "三角市場", notes: "午餐：海鮮丼 (武田鮮魚店/滝波食堂)" },
-              { time: "14:00", type: "sightseeing", name: "小樽音樂盒博物館本館", notes: "🎵 沿堺町通開始步行" },
-              { time: "15:00", type: "shopping", name: "六花亭 / 北菓樓", notes: "購買伴手禮 / 夢不思議泡芙 / 葡萄奶油夾心" },
-              { time: "16:00", type: "sightseeing", name: "LeTAO Pathos", notes: "🍰 適合坐下來喝下午茶、休息避寒" },
-              { time: "17:30", type: "sightseeing", name: "出拔小路", notes: "拍照 / 小吃點心，走到運河邊" },
-              { time: "18:00", type: "sightseeing", name: "小樽運河 (點燈夜景)", notes: "📸 必拍！淺草橋拍攝點" },
-              { time: "19:00", type: "sightseeing", name: "天狗山夜景", notes: "🚠 開車上山到纜車站 (視雪況而定)" },
-              { time: "Dinner", type: "dinner", name: "小樽市區晚餐", notes: "推薦：若雞時代 (炸半雞) 或政壽司" }
+              { id: "d6-1", time: "10:00", type: "transit", name: "退房 / 出發小樽", notes: "🚗 札樽道約 50 分鐘" },
+              { id: "d6-2", time: "11:00", type: "hotel", name: "STAY's OTARU", notes: "辦理入住或先寄放行李 / 附設停車場" },
+              { id: "d6-3", time: "12:30", type: "lunch", name: "三角市場", notes: "午餐：海鮮丼 (武田鮮魚店/滝波食堂)" },
+              { id: "d6-4", time: "14:00", type: "sightseeing", name: "小樽音樂盒博物館本館", notes: "🎵 沿堺町通開始步行" },
+              { id: "d6-5", time: "15:00", type: "shopping", name: "六花亭 / 北菓樓", notes: "購買伴手禮 / 夢不思議泡芙 / 葡萄奶油夾心" },
+              { id: "d6-6", time: "16:00", type: "sightseeing", name: "LeTAO Pathos", notes: "🍰 適合坐下來喝下午茶、休息避寒" },
+              { id: "d6-7", time: "17:30", type: "sightseeing", name: "出拔小路", notes: "拍照 / 小吃點心，走到運河邊" },
+              { id: "d6-8", time: "18:00", type: "sightseeing", name: "小樽運河 (點燈夜景)", notes: "📸 必拍！淺草橋拍攝點" },
+              { id: "d6-9", time: "19:00", type: "sightseeing", name: "天狗山夜景", notes: "🚠 開車上山到纜車站 (視雪況而定)" },
+              { id: "d6-10", time: "Dinner", type: "dinner", name: "小樽市區晚餐", notes: "推薦：若雞時代 (炸半雞) 或政壽司" }
             ]
           },
           {
@@ -170,12 +162,12 @@
             city: "Shiraoi",
             hotel: "Hoshino Resorts KAI Poroto",
             activities: [
-              { time: "10:00", type: "sightseeing", name: "朝里車站", notes: "🚞 臨海無人車站 / 順路拍照" },
-              { time: "11:30", type: "shopping", name: "三井 Outlet Park", notes: "🛍️ 北廣島 (順路南下，高速公路旁)" },
-              { time: "Lunch", type: "lunch", name: "Outlet 內用餐", notes: "美食廣場解決午餐" },
-              { time: "14:00", type: "transit", name: "前往星野 界 波羅多", notes: "🚗 車程約 1 小時 20 分 (走高速公路)" },
-              { time: "15:30", type: "hotel", name: "星野集團 界 波羅多", notes: "★ Check-in / 享受湖畔摩爾溫泉" },
-              { time: "Dinner", type: "dinner", name: "飯店晚餐", notes: "🍱 北海道季節懷石料理" }
+              { id: "d7-1", time: "10:00", type: "sightseeing", name: "朝里車站", notes: "🚞 臨海無人車站 / 順路拍照" },
+              { id: "d7-2", time: "11:30", type: "shopping", name: "三井 Outlet Park", notes: "🛍️ 北廣島 (順路南下，高速公路旁)" },
+              { id: "d7-3", time: "Lunch", type: "lunch", name: "Outlet 內用餐", notes: "美食廣場解決午餐" },
+              { id: "d7-4", time: "14:00", type: "transit", name: "前往星野 界 波羅多", notes: "🚗 車程約 1 小時 20 分 (走高速公路)" },
+              { id: "d7-5", time: "15:30", type: "hotel", name: "星野集團 界 波羅多", notes: "★ Check-in / 享受湖畔摩爾溫泉" },
+              { id: "d7-6", time: "Dinner", type: "dinner", name: "飯店晚餐", notes: "🍱 北海道季節懷石料理" }
             ]
           },
           {
@@ -183,20 +175,19 @@
             city: "Chitose",
             hotel: "",
             activities: [
-              { time: "Morning", type: "hotel", name: "界 波羅多晨間活動", notes: "♨️ 泡溫泉 / 湖畔散步" },
-              { time: "10:30", type: "transit", name: "前往新千歲機場", notes: "🚗 車程約 50 分鐘" },
-              { time: "11:30", type: "transit", name: "加油 & 租車公司還車", notes: "🏁 SUZUKI 櫃台在國內線航廈" },
-              { time: "12:00", type: "shopping", name: "機場國內線航廈", notes: "🛍️ 最後採買 (哆啦A夢/Royce/六花亭)" },
-              { time: "13:00", type: "transit", name: "國際線櫃台報到", notes: "⏰ 預留充裕時間" }
+              { id: "d8-1", time: "Morning", type: "hotel", name: "界 波羅多晨間活動", notes: "♨️ 泡溫泉 / 湖畔散步" },
+              { id: "d8-2", time: "10:30", type: "transit", name: "前往新千歲機場", notes: "🚗 車程約 50 分鐘" },
+              { id: "d8-3", time: "11:30", type: "transit", name: "加油 & 租車公司還車", notes: "🏁 SUZUKI 櫃台在國內線航廈" },
+              { id: "d8-4", time: "12:00", type: "shopping", name: "機場國內線航廈", notes: "🛍️ 最後採買 (哆啦A夢/Royce/六花亭)" },
+              { id: "d8-5", time: "13:00", type: "transit", name: "國際線櫃台報到", notes: "⏰ 預留充裕時間" }
             ]
           }
         ];
 
-        // 城市/區域配色 (針對北海道調整為雪國色系)
         const cityColors = {
           Sapporo: "bg-blue-100 text-blue-800 border-blue-200",
           Otaru: "bg-cyan-100 text-cyan-800 border-cyan-200",
-          Shiraoi: "bg-stone-100 text-stone-800 border-stone-200", // 溫泉質感
+          Shiraoi: "bg-stone-100 text-stone-800 border-stone-200",
           Chitose: "bg-slate-100 text-slate-800 border-slate-200",
         };
 
@@ -210,6 +201,66 @@
         function HokkaidoTripApp() {
           const [filterCity, setFilterCity] = useState('All');
           const [selectedDate, setSelectedDate] = useState(null);
+          const [expenses, setExpenses] = useState({});
+          const [showExpenseInput, setShowExpenseInput] = useState(null);
+          const [exchangeRate, setExchangeRate] = useState(0.215);
+          const [showSettings, setShowSettings] = useState(false);
+          const [showShopping, setShowShopping] = useState(false);
+          const [shoppingList, setShoppingList] = useState([]);
+          const [newItemName, setNewItemName] = useState("");
+          const [calcAmount, setCalcAmount] = useState("");
+
+          useEffect(() => {
+            const savedExpenses = localStorage.getItem('hokkaido_expenses_2025');
+            const savedRate = localStorage.getItem('hokkaido_exchange_rate_2025');
+            const savedShopping = localStorage.getItem('hokkaido_shopping_list_2025');
+            
+            if (savedExpenses) setExpenses(JSON.parse(savedExpenses));
+            if (savedRate) setExchangeRate(parseFloat(savedRate));
+            if (savedShopping) setShoppingList(JSON.parse(savedShopping));
+          }, []);
+
+          const saveExpense = (id, amount) => {
+            const newExpenses = { ...expenses, [id]: parseInt(amount) || 0 };
+            setExpenses(newExpenses);
+            localStorage.setItem('hokkaido_expenses_2025', JSON.stringify(newExpenses));
+            setShowExpenseInput(null);
+          };
+
+          const getTotalCost = () => {
+            return Object.values(expenses).reduce((a, b) => a + b, 0);
+          };
+
+          const getDaysUntilTrip = () => {
+              const today = new Date();
+              const tripDate = new Date("2025-12-22");
+              const diffTime = tripDate - today;
+              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+              return diffDays > 0 ? diffDays : 0;
+          };
+
+          // Shopping List Logic
+          const addShoppingItem = () => {
+            if (!newItemName.trim()) return;
+            const updatedList = [...shoppingList, { id: Date.now(), text: newItemName, checked: false }];
+            setShoppingList(updatedList);
+            localStorage.setItem('hokkaido_shopping_list_2025', JSON.stringify(updatedList));
+            setNewItemName("");
+          };
+
+          const toggleShoppingItem = (id) => {
+            const updatedList = shoppingList.map(item => 
+                item.id === id ? { ...item, checked: !item.checked } : item
+            );
+            setShoppingList(updatedList);
+            localStorage.setItem('hokkaido_shopping_list_2025', JSON.stringify(updatedList));
+          };
+
+          const deleteShoppingItem = (id) => {
+            const updatedList = shoppingList.filter(item => item.id !== id);
+            setShoppingList(updatedList);
+            localStorage.setItem('hokkaido_shopping_list_2025', JSON.stringify(updatedList));
+          };
 
           const filteredData = filterCity === 'All' 
             ? itineraryData 
@@ -218,7 +269,7 @@
           const scrollToDate = (date) => {
             const element = document.getElementById(`date-${date}`);
             if (element) {
-              const headerOffset = 120; // Adjust for sticky header
+              const headerOffset = 120;
               const elementPosition = element.getBoundingClientRect().top;
               const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
               window.scrollTo({ top: offsetPosition, behavior: "smooth" });
@@ -232,33 +283,29 @@
           };
 
           return (
-            <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-24 max-w-md mx-auto shadow-2xl border-x border-slate-200">
+            <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-36 max-w-md mx-auto shadow-2xl border-x border-slate-200 relative">
               {/* Header */}
               <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm border-b border-slate-200 safe-pt">
                 <div className="px-4 py-3 flex justify-between items-center">
                   <div>
                     <h1 className="text-xl font-extrabold text-slate-800 flex items-center gap-2 tracking-tight">
                       <Snowflake className="w-6 h-6 text-cyan-500" />
-                      北海道自駕之旅
+                      北海道自駕
                     </h1>
-                    <p className="text-xs text-slate-500 font-medium ml-0.5 mt-0.5">2025/12/22 - 12/29</p>
+                    <p className="text-xs text-slate-500 font-medium ml-0.5 mt-0.5">
+                        {getDaysUntilTrip() > 0 ? `距離出發還有 ${getDaysUntilTrip()} 天` : '旅程進行中!'}
+                    </p>
                   </div>
-                  
-                  {/* Dropdown Filter */}
                   <div className="relative">
-                    <select 
-                      value={filterCity} 
-                      onChange={(e) => setFilterCity(e.target.value)}
-                      className="appearance-none bg-slate-100 border border-transparent hover:border-slate-300 rounded-full pl-4 pr-8 py-2 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-cyan-500 focus:outline-none cursor-pointer transition-all"
-                    >
-                      <option value="All">全部行程</option>
+                    <select value={filterCity} onChange={(e) => setFilterCity(e.target.value)}
+                      className="appearance-none bg-slate-100 border border-transparent hover:border-slate-300 rounded-full pl-4 pr-8 py-2 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-cyan-500 focus:outline-none cursor-pointer transition-all">
+                      <option value="All">全部</option>
                       <option value="Sapporo">❄️ 札幌</option>
                       <option value="Otaru">🌊 小樽</option>
                       <option value="Shiraoi">♨️ 白老</option>
                     </select>
                   </div>
                 </div>
-
                 {/* Date Scroller */}
                 <div className="overflow-x-auto flex gap-2 px-4 py-3 no-scrollbar bg-white/95 border-t border-slate-50">
                     {filteredData.map((day) => {
@@ -266,17 +313,11 @@
                        const dayNum = dateObj.getDate();
                        const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
                        const isSelected = selectedDate === day.date;
-
                        return (
-                         <button
-                           key={day.date}
-                           onClick={() => scrollToDate(day.date)}
+                         <button key={day.date} onClick={() => scrollToDate(day.date)}
                            className={`flex flex-col items-center justify-center min-w-[3.6rem] h-14 rounded-2xl transition-all duration-200 border flex-shrink-0 ${
-                             isSelected 
-                               ? 'bg-cyan-600 text-white shadow-md scale-105 border-cyan-600' 
-                               : 'bg-white text-slate-500 border-slate-100 hover:border-slate-200'
-                           }`}
-                         >
+                             isSelected ? 'bg-cyan-600 text-white shadow-md scale-105 border-cyan-600' : 'bg-white text-slate-500 border-slate-100 hover:border-slate-200'
+                           }`}>
                            <span className={`text-[10px] font-bold uppercase tracking-wider ${isSelected ? 'text-cyan-100' : 'text-slate-400'}`}>{dayName}</span>
                            <span className="text-lg font-bold leading-none mt-0.5">{dayNum}</span>
                          </button>
@@ -287,10 +328,8 @@
 
               {/* Main Content */}
               <div className="px-4 pt-6 space-y-10">
-                
                 {filteredData.map((day) => (
                   <div key={day.date} id={`date-${day.date}`} className="relative animate-fadeIn">
-                    {/* Date Header */}
                     <div className="flex items-center gap-3 mb-5 sticky top-32 z-30 bg-slate-50/95 py-3 backdrop-blur-sm border-b border-slate-100/50">
                       <div className={`px-3 py-1 rounded-full text-xs font-bold border shadow-sm ${cityColors[day.city] || "bg-gray-100"}`}>
                         {cityBadges[day.city] || day.city}
@@ -300,84 +339,251 @@
                       </h2>
                     </div>
 
-                    {/* Hotel Info */}
                     {day.hotel && (
                        <div className="mb-6 bg-white rounded-2xl p-4 flex items-start gap-4 border border-cyan-50 shadow-sm ring-1 ring-cyan-100/50">
-                          <div className="bg-cyan-50 p-2 rounded-full text-cyan-600 shrink-0">
-                            <Hotel className="w-5 h-5" />
-                          </div>
+                          <div className="bg-cyan-50 p-2 rounded-full text-cyan-600 shrink-0"><Hotel className="w-5 h-5" /></div>
                           <div className="flex-1">
                             <div className="text-[10px] text-cyan-500 font-bold uppercase tracking-wider mb-0.5">住宿</div>
                             <div className="text-sm font-bold text-slate-900 leading-snug">{day.hotel}</div>
-                            <button 
-                              onClick={() => openMap(day.hotel + " " + day.city)}
-                              className="text-xs font-semibold text-cyan-600 mt-2 flex items-center gap-1 hover:text-cyan-800 bg-cyan-50 px-2 py-1 rounded-md w-fit transition-colors"
-                            >
+                            <button onClick={() => openMap(day.hotel + " " + day.city)}
+                              className="text-xs font-semibold text-cyan-600 mt-2 flex items-center gap-1 hover:text-cyan-800 bg-cyan-50 px-2 py-1 rounded-md w-fit transition-colors">
                               導航 <Navigation className="w-3 h-3 inline" />
                             </button>
                           </div>
                        </div>
                     )}
 
-                    {/* Timeline */}
                     <div className="relative border-l-2 border-slate-200 ml-4 space-y-8 pb-2">
                       {day.activities.map((activity, actIndex) => (
                         <div key={actIndex} className="relative pl-8">
-                          {/* Timeline Dot */}
                           <div className={`absolute -left-[9px] top-4 w-4 h-4 rounded-full border-[3px] border-slate-50 shadow-sm z-10 ${
                             activity.type === 'dinner' || activity.type === 'lunch' ? 'bg-orange-400' : 
                             activity.type === 'transit' ? 'bg-slate-500' : 'bg-cyan-500'
                           }`}></div>
                           
-                          {/* Card */}
-                          <div 
-                            onClick={() => openMap(activity.name + " " + day.city)}
-                            className="bg-white rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-slate-100 hover:shadow-md transition-all cursor-pointer active:scale-[0.98] active:bg-slate-50"
-                          >
-                            <div className="flex justify-between items-center mb-3">
-                               <span className={`text-[10px] font-bold px-2 py-1 rounded-md text-white shadow-sm ${
-                                 activity.type === 'dinner' || activity.type === 'lunch' ? 'bg-orange-400' : 
-                                 activity.type === 'transit' ? 'bg-slate-500' : 'bg-cyan-500'
-                               }`}>
-                                 {activity.time}
-                               </span>
-                               <span className="text-slate-400">
-                                 {(activity.name.includes("慕尼黑") || activity.name.includes("燈樹")) && <TreeIcon className="w-4 h-4" />}
-                                 {(activity.name.includes("起飛") || activity.name.includes("抵達")) && <PlaneIcon className="w-4 h-4" />}
-                                 {activity.type === 'transit' && !activity.name.includes("起飛") && <Car className="w-4 h-4" />}
-                                 {(activity.type === 'lunch' || activity.type === 'dinner') && <Utensils className="w-4 h-4" />}
-                                 {(activity.type === 'sightseeing' || activity.type === 'shopping') && !activity.name.includes("慕尼黑") && <MapPin className="w-4 h-4" />}
-                                 {activity.type === 'hotel' && <Hotel className="w-4 h-4" />}
-                               </span>
+                          <div className="bg-white rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-slate-100 hover:shadow-md transition-all active:scale-[0.98] active:bg-slate-50">
+                            <div onClick={() => openMap(activity.name + " " + day.city)} className="cursor-pointer">
+                                <div className="flex justify-between items-center mb-3">
+                                   <span className={`text-[10px] font-bold px-2 py-1 rounded-md text-white shadow-sm ${
+                                     activity.type === 'dinner' || activity.type === 'lunch' ? 'bg-orange-400' : 
+                                     activity.type === 'transit' ? 'bg-slate-500' : 'bg-cyan-500'
+                                   }`}>{activity.time}</span>
+                                   <span className="text-slate-400">
+                                     {activity.name.includes("慕尼黑") || activity.name.includes("燈樹") ? <TreeIcon className="w-4 h-4" /> : null}
+                                     {(activity.name.includes("起飛") || activity.name.includes("抵達")) && <PlaneIcon className="w-4 h-4" />}
+                                     {activity.type === 'transit' && !activity.name.includes("起飛") && <Car className="w-4 h-4" />}
+                                     {(activity.type === 'lunch' || activity.type === 'dinner') && <Utensils className="w-4 h-4" />}
+                                     {(activity.type === 'sightseeing' || activity.type === 'shopping') && !activity.name.includes("慕尼黑") && <MapPin className="w-4 h-4" />}
+                                     {activity.type === 'hotel' && <Hotel className="w-4 h-4" />}
+                                   </span>
+                                </div>
+                                <h3 className="font-bold text-slate-800 text-base mb-1.5 leading-snug">{activity.name}</h3>
+                                {activity.notes && <div className="bg-slate-50 rounded-lg p-2.5 mt-2"><p className="text-xs text-slate-600 font-medium leading-relaxed">{activity.notes}</p></div>}
                             </div>
-                            
-                            <h3 className="font-bold text-slate-800 text-base mb-1.5 leading-snug">{activity.name}</h3>
-                            
-                            {activity.notes && (
-                              <div className="bg-slate-50 rounded-lg p-2.5 mt-2">
-                                <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                                  {activity.notes}
-                                </p>
-                              </div>
-                            )}
+
+                            {/* Expense Section */}
+                            <div className="mt-3 pt-3 border-t border-slate-50 flex items-center justify-between">
+                                {showExpenseInput === activity.id ? (
+                                    <div className="flex items-center gap-2 w-full animate-fadeIn">
+                                        <span className="text-slate-400 text-sm">¥</span>
+                                        <input 
+                                            type="number" 
+                                            autoFocus
+                                            placeholder="輸入金額"
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-sm outline-none focus:border-cyan-500"
+                                            onBlur={(e) => saveExpense(activity.id, e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && saveExpense(activity.id, e.target.value)}
+                                            defaultValue={expenses[activity.id] || ''}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="flex justify-between w-full items-center">
+                                        <div className="text-sm font-bold text-slate-700">
+                                            {expenses[activity.id] ? `¥${expenses[activity.id].toLocaleString()}` : <span className="text-slate-300 text-xs">未記帳</span>}
+                                        </div>
+                                        <button 
+                                            onClick={() => setShowExpenseInput(activity.id)}
+                                            className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 transition-colors"
+                                        >
+                                            <MoneyIcon className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                           </div>
                         </div>
                       ))}
                     </div>
-
                   </div>
                 ))}
-
-                {/* Footer */}
-                <div className="text-center text-slate-400 text-xs font-medium pt-8 pb-12">
-                  <p>Safe Driving in Hokkaido! 🚗❄️</p>
-                </div>
               </div>
+
+              {/* Total Budget Footer */}
+              <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-4 pb-8 z-40 safe-pb shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                  <div className="max-w-md mx-auto flex justify-between items-center gap-2">
+                      <div className="flex-1">
+                          <div className="text-xs text-slate-500 font-bold mb-0.5">總花費</div>
+                          <div className="text-xl font-extrabold text-cyan-600 leading-none">
+                              ¥{getTotalCost().toLocaleString()}
+                              <span className="text-[10px] text-slate-400 font-medium ml-1 block mt-1">
+                                ≈ NT$ {(getTotalCost() * exchangeRate).toLocaleString(undefined, {maximumFractionDigits:0})}
+                              </span>
+                          </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button 
+                            onClick={() => setShowShopping(true)}
+                            className="bg-orange-50 p-3 rounded-full text-orange-600 hover:bg-orange-100 transition-colors shadow-sm"
+                        >
+                            <ShoppingBagIcon className="w-6 h-6" />
+                        </button>
+                        <button 
+                            onClick={() => setShowSettings(true)}
+                            className="bg-slate-100 p-3 rounded-full text-slate-600 hover:bg-slate-200 transition-colors shadow-sm"
+                        >
+                            <SettingsIcon className="w-6 h-6" />
+                        </button>
+                      </div>
+                  </div>
+              </div>
+
+              {/* Shopping Modal */}
+              {showShopping && (
+                <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn" onClick={() => setShowShopping(false)}>
+                    <div className="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-4 shrink-0">
+                            <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                <ShoppingBagIcon className="w-5 h-5 text-orange-500" />
+                                購物助手
+                            </h3>
+                            <button onClick={() => setShowShopping(false)} className="text-slate-400 hover:text-slate-600">✕</button>
+                        </div>
+
+                        {/* Quick Converter */}
+                        <div className="bg-orange-50 rounded-xl p-4 mb-6 shrink-0">
+                            <label className="block text-xs font-bold text-orange-600/70 uppercase tracking-wider mb-2">快速換算 (匯率 {exchangeRate})</label>
+                            <div className="flex items-center gap-3">
+                                <span className="text-orange-900 font-bold">¥</span>
+                                <input 
+                                    type="number" 
+                                    placeholder="輸入日幣..."
+                                    value={calcAmount}
+                                    onChange={(e) => setCalcAmount(e.target.value)}
+                                    className="bg-white/50 w-full rounded-lg px-2 py-1 outline-none text-lg font-bold text-orange-900 placeholder:text-orange-900/30"
+                                />
+                            </div>
+                            <div className="text-right mt-1 font-bold text-orange-700 text-sm">
+                                ≈ NT$ {calcAmount ? (parseFloat(calcAmount) * exchangeRate).toLocaleString(undefined, {maximumFractionDigits:0}) : '0'}
+                            </div>
+                        </div>
+
+                        {/* Checklist */}
+                        <div className="flex-1 overflow-y-auto no-scrollbar">
+                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">必買清單</label>
+                            <div className="flex gap-2 mb-4">
+                                <input 
+                                    type="text" 
+                                    value={newItemName}
+                                    onChange={(e) => setNewItemName(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && addShoppingItem()}
+                                    placeholder="新增項目 (例: EVE止痛藥)"
+                                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-orange-500"
+                                />
+                                <button onClick={addShoppingItem} className="bg-orange-500 text-white p-2 rounded-xl hover:bg-orange-600 transition-colors">
+                                    <PlusIcon className="w-5 h-5" />
+                                </button>
+                            </div>
+                            <div className="space-y-2">
+                                {shoppingList.length === 0 && (
+                                    <div className="text-center text-slate-300 text-sm py-8">還沒有想買的東西嗎？</div>
+                                )}
+                                {shoppingList.map(item => (
+                                    <div key={item.id} className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-transparent hover:border-slate-200 transition-all">
+                                        <label className="checkbox-wrapper relative flex items-center cursor-pointer">
+                                            <input type="checkbox" checked={item.checked} onChange={() => toggleShoppingItem(item.id)} className="peer sr-only" />
+                                            <div className="w-5 h-5 border-2 border-slate-300 rounded-md peer-checked:bg-orange-500 peer-checked:border-orange-500 transition-all flex items-center justify-center">
+                                                <CheckIcon className="w-3 h-3 text-white hidden" />
+                                            </div>
+                                        </label>
+                                        <span className={`flex-1 text-sm font-medium ${item.checked ? 'text-slate-400 line-through' : 'text-slate-700'}`}>{item.text}</span>
+                                        <button onClick={() => deleteShoppingItem(item.id)} className="text-slate-300 hover:text-red-400 transition-colors">
+                                            <TrashIcon className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              )}
+
+              {/* Settings Modal */}
+              {showSettings && (
+                <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn" onClick={() => setShowSettings(false)}>
+                    <div className="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-6" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+                            <h3 className="text-lg font-bold text-slate-800">工具箱</h3>
+                            <button onClick={() => setShowSettings(false)} className="text-slate-400 hover:text-slate-600">✕</button>
+                        </div>
+                        
+                        {/* Currency Setting */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">匯率設定 (JPY -> TWD)</label>
+                            <div className="flex items-center gap-2 bg-slate-50 rounded-xl px-4 py-3 border border-slate-200">
+                                <span className="text-slate-400 font-bold">0.</span>
+                                <input 
+                                    type="number" 
+                                    value={exchangeRate.toString().replace('0.', '')}
+                                    onChange={(e) => {
+                                        const val = parseFloat('0.' + e.target.value);
+                                        setExchangeRate(val);
+                                        localStorage.setItem('hokkaido_exchange_rate_2025', val);
+                                    }}
+                                    className="bg-transparent w-full outline-none font-bold text-slate-700"
+                                    placeholder="215"
+                                />
+                            </div>
+                            <p className="text-xs text-slate-400 mt-2 text-right">目前匯率: {exchangeRate}</p>
+                        </div>
+
+                        {/* Useful Links */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">自駕必備連結</label>
+                            <div className="grid grid-cols-2 gap-3">
+                                <a href="https://www.jma.go.jp/bosai/snow/" target="_blank" className="flex flex-col items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 p-4 rounded-xl text-blue-700 transition-colors">
+                                    <Snowflake className="w-6 h-6" />
+                                    <span className="text-xs font-bold">降雪預報</span>
+                                </a>
+                                <a href="https://info-road.hdb.hkd.mlit.go.jp/RoadInfo/index.htm" target="_blank" className="flex flex-col items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 p-4 rounded-xl text-slate-700 transition-colors">
+                                    <Car className="w-6 h-6" />
+                                    <span className="text-xs font-bold">即時路況</span>
+                                </a>
+                                <a href="https://mapcode.com/en/" target="_blank" className="flex flex-col items-center justify-center gap-2 bg-orange-50 hover:bg-orange-100 p-4 rounded-xl text-orange-700 transition-colors">
+                                    <MapPin className="w-6 h-6" />
+                                    <span className="text-xs font-bold">MapCode</span>
+                                </a>
+                                <button onClick={() => {
+                                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(expenses));
+                                    const downloadAnchorNode = document.createElement('a');
+                                    downloadAnchorNode.setAttribute("href",     dataStr);
+                                    downloadAnchorNode.setAttribute("download", "expenses_backup.json");
+                                    document.body.appendChild(downloadAnchorNode);
+                                    downloadAnchorNode.click();
+                                    downloadAnchorNode.remove();
+                                }} className="flex flex-col items-center justify-center gap-2 bg-green-50 hover:bg-green-100 p-4 rounded-xl text-green-700 transition-colors">
+                                    <ExternalLink className="w-6 h-6" />
+                                    <span className="text-xs font-bold">備份記帳</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              )}
 
               {/* FAB */}
               <button 
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="fixed bottom-8 right-6 bg-slate-900/90 text-white p-3.5 rounded-full shadow-xl hover:bg-black transition-all z-40 active:scale-90 backdrop-blur-sm mb-safe safe-pb"
+                className="fixed bottom-24 right-6 bg-slate-900/90 text-white p-3.5 rounded-full shadow-xl hover:bg-black transition-all z-40 active:scale-90 backdrop-blur-sm safe-pb"
               >
                 <ArrowLeft className="w-6 h-6 rotate-90" />
               </button>
