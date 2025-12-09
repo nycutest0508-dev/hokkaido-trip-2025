@@ -35,7 +35,6 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
         
-        /* Checkbox Style */
         .checkbox-wrapper input:checked + div { background-color: #06b6d4; border-color: #06b6d4; }
         .checkbox-wrapper input:checked + div svg { display: block; }
     </style>
@@ -44,12 +43,12 @@
     <div id="root">
         <div class="min-h-screen flex flex-col items-center justify-center text-slate-400 space-y-4 safe-pb">
             <div class="w-10 h-10 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-            <p class="text-sm font-medium">正在載入購物助手...</p>
+            <p class="text-sm font-medium">正在載入行程與相簿...</p>
         </div>
     </div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
         // Icons
         const Hotel = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M9 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/><path d="M9 21v-5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5"/></svg>;
@@ -68,134 +67,98 @@
         const PlusIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M5 12h14"/><path d="M12 5v14"/></svg>;
         const TrashIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>;
         const CheckIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="20 6 9 17 4 12"/></svg>;
+        const PhotoIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>;
+        const XIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>;
+        const ChevronRight = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m9 18 6-6-6-6"/></svg>;
+        const ChevronLeft = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m15 18-6-6 6-6"/></svg>;
 
-        // 行程資料
+        // --- Data (北海道詳細行程) ---
         const itineraryData = [
-          {
-            date: "2025-12-22",
-            city: "Sapporo",
-            hotel: "Quintessa Hotel Sapporo",
-            activities: [
-              { id: "d1-1", time: "09:00", type: "transit", name: "TSA 松山機場起飛", notes: "✈️ JL0096 (JAL) / 行李: 2件" },
-              { id: "d1-2", time: "13:00", type: "transit", name: "抵達東京羽田 (HND)", notes: "⚠️ 需入境領行李 ➔ 轉國內線掛行李 (T3 -> T1)" },
-              { id: "d1-3", time: "15:30", type: "transit", name: "HND 羽田起飛", notes: "✈️ JL0521 (國內線)" },
-              { id: "d1-4", time: "17:05", type: "transit", name: "抵達新千歲 (CTS)", notes: "分秒必爭！派人先衝租車櫃台" },
-              { id: "d1-5", time: "17:30", type: "transit", name: "SUZUKI 租車取車", notes: "★ 訂單: JS2501896 (國內線櫃台) / 18:00前務必抵達" },
-              { id: "d1-6", time: "Drive", type: "transit", name: "前往札幌市區", notes: "車程約 1 小時 (注意雪地駕駛)" },
-              { id: "d1-7", time: "Check-in", type: "hotel", name: "Quintessa Hotel Sapporo", notes: "★ 訂單: 6840839171 (PIN: 4589) / 確認停車位" },
-              { id: "d1-8", time: "Dinner", type: "dinner", name: "札幌湯咖哩", notes: "飯店附近：Suage+ 或 Samurai" }
-            ]
-          },
-          {
-            date: "2025-12-23",
-            city: "Sapporo",
-            hotel: "Quintessa Hotel Sapporo",
-            activities: [
-              { id: "d2-1", time: "09:30", type: "sightseeing", name: "Snow Cruise ONZE", notes: "🎿 滑雪囉! (訂單: 251108075341000650) / 海景滑雪場" },
-              { id: "d2-2", time: "15:30", type: "transit", name: "滑雪結束 / 返回札幌", notes: "🚗 車程約 40 分" },
-              { id: "d2-3", time: "Dinner", type: "dinner", name: "薄野 (Susukino)", notes: "拉麵橫丁或居酒屋" },
-              { id: "d2-4", time: "Shopping", type: "shopping", name: "唐吉訶德 / 藥妝", notes: "狸小路逛街" }
-            ]
-          },
-          {
-            date: "2025-12-24",
-            city: "Sapporo",
-            hotel: "Quintessa Hotel Sapporo",
-            activities: [
-              { id: "d3-1", time: "09:30", type: "sightseeing", name: "Snow Cruise ONZE", notes: "🎿 Day 2 滑雪 (訂單: 251108075341000650)" },
-              { id: "d3-2", time: "15:05", type: "transit", name: "第二批人員抵達", notes: "✈️ JL3107 抵達新千歲" },
-              { id: "d3-3", time: "16:30", type: "transit", name: "第二批前往飯店", notes: "🚆 搭 JR 快速 Airport 至札幌站 ➔ 轉車至飯店" },
-              { id: "d3-4", time: "17:30", type: "hotel", name: "全員飯店會合", notes: "Quintessa Hotel / ⚠️第二駕駛建議之後再補辦" },
-              { id: "d3-5", time: "Dinner", type: "dinner", name: "聖誕晚餐", notes: "慶祝全員到齊！(餐廳或聖誕市集)" }
-            ]
-          },
-          {
-            date: "2025-12-25",
-            city: "Sapporo",
-            hotel: "Quintessa & LIT'S INN",
-            activities: [
-              { id: "d4-1", time: "10:30", type: "transit", name: "退房 / 出發", notes: "🚗 前往三井 Outlet (行李全上車)" },
-              { id: "d4-2", time: "11:10", type: "shopping", name: "三井 Outlet 北廣島", notes: "逛街吃午餐 (室內型避寒)" },
-              { id: "d4-3", time: "13:40", type: "transit", name: "前往新千歲機場", notes: "🚗 接機 / ⚠️ 注意行李空間" },
-              { id: "d4-4", time: "14:20", type: "transit", name: "第三批人員抵達", notes: "✈️ 星宇 JX850 (T1 09:20起飛)" },
-              { id: "d4-5", time: "15:10", type: "transit", name: "國際線接機", notes: "入境約需 50 分 / 建議停 B 停車場" },
-              { id: "d4-6", time: "16:30", type: "hotel", name: "LIT'S INN Sapporo", notes: "🟢 全員到齊 / 辦理入住" },
-              { id: "d4-7", time: "17:30", type: "sightseeing", name: "慕尼黑聖誕市集", notes: "🎄 大通公園 2丁目 (最後一晚! 至 21:00)" },
-              { id: "d4-8", time: "18:30", type: "sightseeing", name: "白色燈樹節", notes: "✨ White Illumination (大通 1-6丁目)" },
-              { id: "d4-9", time: "Dinner", type: "dinner", name: "聖誕晚餐", notes: "市集小吃 or 薄野大餐" }
-            ]
-          },
-          {
-            date: "2025-12-26",
-            city: "Sapporo",
-            hotel: "Quintessa & LIT'S INN",
-            activities: [
-              { id: "d5-1", time: "08:30", type: "lunch", name: "二條市場", notes: "早餐吃豪華海鮮丼 / 購買乾貨" },
-              { id: "d5-2", time: "09:45", type: "sightseeing", name: "北海道大學", notes: "🏫 克拉克像 / 白雪校園散策 (需停正門外)" },
-              { id: "d5-3", time: "11:00", type: "sightseeing", name: "北海道神宮", notes: "⛩️ 雪中參拜 / 必吃六花亭判官餅" },
-              { id: "d5-4", time: "12:30", type: "sightseeing", name: "白色戀人公園", notes: "🍪 歐風城堡拍照 / 園區內午餐" },
-              { id: "d5-5", time: "15:30", type: "transit", name: "前往藻岩山", notes: "🚗 提早出發避開下班車潮" },
-              { id: "d5-6", time: "16:00", type: "sightseeing", name: "藻岩山夜景", notes: "🚠 必看! 日本新三大夜景 (日落前抵達)" },
-              { id: "d5-7", time: "18:30", type: "sightseeing", name: "札幌電視塔", notes: "🗼 俯瞰大通公園夜景" },
-              { id: "d5-8", time: "Dinner", type: "dinner", name: "札幌市區晚餐", notes: "成吉思汗烤肉 / 螃蟹料理" }
-            ]
-          },
-          {
-            date: "2025-12-27",
-            city: "Otaru",
-            hotel: "STAY's OTARU",
-            activities: [
-              { id: "d6-1", time: "10:00", type: "transit", name: "退房 / 出發小樽", notes: "🚗 札樽道約 50 分鐘" },
-              { id: "d6-2", time: "11:00", type: "hotel", name: "STAY's OTARU", notes: "辦理入住或先寄放行李 / 附設停車場" },
-              { id: "d6-3", time: "12:30", type: "lunch", name: "三角市場", notes: "午餐：海鮮丼 (武田鮮魚店/滝波食堂)" },
-              { id: "d6-4", time: "14:00", type: "sightseeing", name: "小樽音樂盒博物館本館", notes: "🎵 沿堺町通開始步行" },
-              { id: "d6-5", time: "15:00", type: "shopping", name: "六花亭 / 北菓樓", notes: "購買伴手禮 / 夢不思議泡芙 / 葡萄奶油夾心" },
-              { id: "d6-6", time: "16:00", type: "sightseeing", name: "LeTAO Pathos", notes: "🍰 適合坐下來喝下午茶、休息避寒" },
-              { id: "d6-7", time: "17:30", type: "sightseeing", name: "出拔小路", notes: "拍照 / 小吃點心，走到運河邊" },
-              { id: "d6-8", time: "18:00", type: "sightseeing", name: "小樽運河 (點燈夜景)", notes: "📸 必拍！淺草橋拍攝點" },
-              { id: "d6-9", time: "19:00", type: "sightseeing", name: "天狗山夜景", notes: "🚠 開車上山到纜車站 (視雪況而定)" },
-              { id: "d6-10", time: "Dinner", type: "dinner", name: "小樽市區晚餐", notes: "推薦：若雞時代 (炸半雞) 或政壽司" }
-            ]
-          },
-          {
-            date: "2025-12-28",
-            city: "Shiraoi",
-            hotel: "Hoshino Resorts KAI Poroto",
-            activities: [
-              { id: "d7-1", time: "10:00", type: "sightseeing", name: "朝里車站", notes: "🚞 臨海無人車站 / 順路拍照" },
-              { id: "d7-2", time: "11:30", type: "shopping", name: "三井 Outlet Park", notes: "🛍️ 北廣島 (順路南下，高速公路旁)" },
-              { id: "d7-3", time: "Lunch", type: "lunch", name: "Outlet 內用餐", notes: "美食廣場解決午餐" },
-              { id: "d7-4", time: "14:00", type: "transit", name: "前往星野 界 波羅多", notes: "🚗 車程約 1 小時 20 分 (走高速公路)" },
-              { id: "d7-5", time: "15:30", type: "hotel", name: "星野集團 界 波羅多", notes: "★ Check-in / 享受湖畔摩爾溫泉" },
-              { id: "d7-6", time: "Dinner", type: "dinner", name: "飯店晚餐", notes: "🍱 北海道季節懷石料理" }
-            ]
-          },
-          {
-            date: "2025-12-29",
-            city: "Chitose",
-            hotel: "",
-            activities: [
-              { id: "d8-1", time: "Morning", type: "hotel", name: "界 波羅多晨間活動", notes: "♨️ 泡溫泉 / 湖畔散步" },
-              { id: "d8-2", time: "10:30", type: "transit", name: "前往新千歲機場", notes: "🚗 車程約 50 分鐘" },
-              { id: "d8-3", time: "11:30", type: "transit", name: "加油 & 租車公司還車", notes: "🏁 SUZUKI 櫃台在國內線航廈" },
-              { id: "d8-4", time: "12:00", type: "shopping", name: "機場國內線航廈", notes: "🛍️ 最後採買 (哆啦A夢/Royce/六花亭)" },
-              { id: "d8-5", time: "13:00", type: "transit", name: "國際線櫃台報到", notes: "⏰ 預留充裕時間" }
-            ]
-          }
+          { date: "2025-12-22", city: "Sapporo", hotel: "Quintessa Hotel Sapporo", activities: [ { id: "d1-1", time: "09:00", type: "transit", name: "TSA 松山機場起飛", notes: "✈️ JL0096 (JAL) / 行李: 2件" }, { id: "d1-2", time: "13:00", type: "transit", name: "抵達東京羽田 (HND)", notes: "⚠️ 需入境領行李 ➔ 轉國內線掛行李 (T3 -> T1)" }, { id: "d1-3", time: "15:30", type: "transit", name: "HND 羽田起飛", notes: "✈️ JL0521 (國內線)" }, { id: "d1-4", time: "17:05", type: "transit", name: "抵達新千歲 (CTS)", notes: "分秒必爭！派人先衝租車櫃台" }, { id: "d1-5", time: "17:30", type: "transit", name: "SUZUKI 租車取車", notes: "★ 訂單: JS2501896 (國內線櫃台) / 18:00前務必抵達" }, { id: "d1-6", time: "Drive", type: "transit", name: "前往札幌市區", notes: "車程約 1 小時 (注意雪地駕駛)" }, { id: "d1-7", time: "Check-in", type: "hotel", name: "Quintessa Hotel Sapporo", notes: "★ 訂單: 6840839171 (PIN: 4589) / 確認停車位" }, { id: "d1-8", time: "Dinner", type: "dinner", name: "札幌湯咖哩", notes: "飯店附近：Suage+ 或 Samurai" } ] },
+          { date: "2025-12-23", city: "Sapporo", hotel: "Quintessa Hotel Sapporo", activities: [ { id: "d2-1", time: "09:30", type: "sightseeing", name: "Snow Cruise ONZE", notes: "🎿 滑雪囉! (訂單: 251108075341000650) / 海景滑雪場" }, { id: "d2-2", time: "15:30", type: "transit", name: "滑雪結束 / 返回札幌", notes: "🚗 車程約 40 分" }, { id: "d2-3", time: "Dinner", type: "dinner", name: "薄野 (Susukino)", notes: "拉麵橫丁或居酒屋" }, { id: "d2-4", time: "Shopping", type: "shopping", name: "唐吉訶德 / 藥妝", notes: "狸小路逛街" } ] },
+          { date: "2025-12-24", city: "Sapporo", hotel: "Quintessa Hotel Sapporo", activities: [ { id: "d3-1", time: "09:30", type: "sightseeing", name: "Snow Cruise ONZE", notes: "🎿 Day 2 滑雪 (訂單: 251108075341000650)" }, { id: "d3-2", time: "15:05", type: "transit", name: "第二批人員抵達", notes: "✈️ JL3107 抵達新千歲" }, { id: "d3-3", time: "16:30", type: "transit", name: "第二批前往飯店", notes: "🚆 搭 JR 快速 Airport 至札幌站 ➔ 轉車至飯店" }, { id: "d3-4", time: "17:30", type: "hotel", name: "全員飯店會合", notes: "Quintessa Hotel / ⚠️第二駕駛建議之後再補辦" }, { id: "d3-5", time: "Dinner", type: "dinner", name: "聖誕晚餐", notes: "慶祝全員到齊！(餐廳或聖誕市集)" } ] },
+          { date: "2025-12-25", city: "Sapporo", hotel: "Quintessa & LIT'S INN", activities: [ { id: "d4-1", time: "10:30", type: "transit", name: "退房 / 出發", notes: "🚗 前往三井 Outlet (行李全上車)" }, { id: "d4-2", time: "11:10", type: "shopping", name: "三井 Outlet 北廣島", notes: "逛街吃午餐 (室內型避寒)" }, { id: "d4-3", time: "13:40", type: "transit", name: "前往新千歲機場", notes: "🚗 接機 / ⚠️ 注意行李空間" }, { id: "d4-4", time: "14:20", type: "transit", name: "第三批人員抵達", notes: "✈️ 星宇 JX850 (T1 09:20起飛)" }, { id: "d4-5", time: "15:10", type: "transit", name: "國際線接機", notes: "入境約需 50 分 / 建議停 B 停車場" }, { id: "d4-6", time: "16:30", type: "hotel", name: "LIT'S INN Sapporo", notes: "🟢 全員到齊 / 辦理入住" }, { id: "d4-7", time: "17:30", type: "sightseeing", name: "慕尼黑聖誕市集", notes: "🎄 大通公園 2丁目 (最後一晚! 至 21:00)" }, { id: "d4-8", time: "18:30", type: "sightseeing", name: "白色燈樹節", notes: "✨ White Illumination (大通 1-6丁目)" }, { id: "d4-9", time: "Dinner", type: "dinner", name: "聖誕晚餐", notes: "市集小吃 or 薄野大餐" } ] },
+          { date: "2025-12-26", city: "Sapporo", hotel: "Quintessa & LIT'S INN", activities: [ { id: "d5-1", time: "08:30", type: "lunch", name: "二條市場", notes: "早餐吃豪華海鮮丼 / 購買乾貨" }, { id: "d5-2", time: "09:45", type: "sightseeing", name: "北海道大學", notes: "🏫 克拉克像 / 白雪校園散策 (需停正門外)" }, { id: "d5-3", time: "11:00", type: "sightseeing", name: "北海道神宮", notes: "⛩️ 雪中參拜 / 必吃六花亭判官餅" }, { id: "d5-4", time: "12:30", type: "sightseeing", name: "白色戀人公園", notes: "🍪 歐風城堡拍照 / 園區內午餐" }, { id: "d5-5", time: "15:30", type: "transit", name: "前往藻岩山", notes: "🚗 提早出發避開下班車潮" }, { id: "d5-6", time: "16:00", type: "sightseeing", name: "藻岩山夜景", notes: "🚠 必看! 日本新三大夜景 (日落前抵達)" }, { id: "d5-7", time: "18:30", type: "sightseeing", name: "札幌電視塔", notes: "🗼 俯瞰大通公園夜景" }, { id: "d5-8", time: "Dinner", type: "dinner", name: "札幌市區晚餐", notes: "成吉思汗烤肉 / 螃蟹料理" } ] },
+          { date: "2025-12-27", city: "Otaru", hotel: "STAY's OTARU", activities: [ { id: "d6-1", time: "10:00", type: "transit", name: "退房 / 出發小樽", notes: "🚗 札樽道約 50 分鐘" }, { id: "d6-2", time: "11:00", type: "hotel", name: "STAY's OTARU", notes: "辦理入住或先寄放行李 / 附設停車場" }, { id: "d6-3", time: "12:30", type: "lunch", name: "三角市場", notes: "午餐：海鮮丼 (武田鮮魚店/滝波食堂)" }, { id: "d6-4", time: "14:00", type: "sightseeing", name: "小樽音樂盒博物館本館", notes: "🎵 沿堺町通開始步行" }, { id: "d6-5", time: "15:00", type: "shopping", name: "六花亭 / 北菓樓", notes: "購買伴手禮 / 夢不思議泡芙 / 葡萄奶油夾心" }, { id: "d6-6", time: "16:00", type: "sightseeing", name: "LeTAO Pathos", notes: "🍰 適合坐下來喝下午茶、休息避寒" }, { id: "d6-7", time: "17:30", type: "sightseeing", name: "出拔小路", notes: "拍照 / 小吃點心，走到運河邊" }, { id: "d6-8", time: "18:00", type: "sightseeing", name: "小樽運河 (點燈夜景)", notes: "📸 必拍！淺草橋拍攝點" }, { id: "d6-9", time: "19:00", type: "sightseeing", name: "天狗山夜景", notes: "🚠 開車上山到纜車站 (視雪況而定)" }, { id: "d6-10", time: "Dinner", type: "dinner", name: "小樽市區晚餐", notes: "推薦：若雞時代 (炸半雞) 或政壽司" } ] },
+          { date: "2025-12-28", city: "Shiraoi", hotel: "Hoshino Resorts KAI Poroto", activities: [ { id: "d7-1", time: "10:00", type: "sightseeing", name: "朝里車站", notes: "🚞 臨海無人車站 / 順路拍照" }, { id: "d7-2", time: "11:30", type: "shopping", name: "三井 Outlet Park", notes: "🛍️ 北廣島 (順路南下，高速公路旁)" }, { id: "d7-3", time: "Lunch", type: "lunch", name: "Outlet 內用餐", notes: "美食廣場解決午餐" }, { id: "d7-4", time: "14:00", type: "transit", name: "前往星野 界 波羅多", notes: "🚗 車程約 1 小時 20 分 (走高速公路)" }, { id: "d7-5", time: "15:30", type: "hotel", name: "星野集團 界 波羅多", notes: "★ Check-in / 享受湖畔摩爾溫泉" }, { id: "d7-6", time: "Dinner", type: "dinner", name: "飯店晚餐", notes: "🍱 北海道季節懷石料理" } ] },
+          { date: "2025-12-29", city: "Chitose", hotel: "", activities: [ { id: "d8-1", time: "Morning", type: "hotel", name: "界 波羅多晨間活動", notes: "♨️ 泡溫泉 / 湖畔散步" }, { id: "d8-2", time: "10:30", type: "transit", name: "前往新千歲機場", notes: "🚗 車程約 50 分鐘" }, { id: "d8-3", time: "11:30", type: "transit", name: "加油 & 租車公司還車", notes: "🏁 SUZUKI 櫃台在國內線航廈" }, { id: "d8-4", time: "12:00", type: "shopping", name: "機場國內線航廈", notes: "🛍️ 最後採買 (哆啦A夢/Royce/六花亭)" }, { id: "d8-5", time: "13:00", type: "transit", name: "國際線櫃台報到", notes: "⏰ 預留充裕時間" } ] }
         ];
 
-        const cityColors = {
-          Sapporo: "bg-blue-100 text-blue-800 border-blue-200",
-          Otaru: "bg-cyan-100 text-cyan-800 border-cyan-200",
-          Shiraoi: "bg-stone-100 text-stone-800 border-stone-200",
-          Chitose: "bg-slate-100 text-slate-800 border-slate-200",
-        };
+        // 範例相簿資料 (您可以自行替換圖片網址)
+        const photoGallery = [
+            { id: 1, url: "https://images.unsplash.com/photo-1548263594-a71e7f71e439?q=80&w=1000&auto=format&fit=crop", caption: "札幌大通公園" },
+            { id: 2, url: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=1000&auto=format&fit=crop", caption: "小樽運河夜景" },
+            { id: 3, url: "https://images.unsplash.com/photo-1612294027725-7b3b08e77242?q=80&w=1000&auto=format&fit=crop", caption: "北海道神宮" },
+            { id: 4, url: "https://images.unsplash.com/photo-1516466723877-e462d73008e9?q=80&w=1000&auto=format&fit=crop", caption: "新千歲機場" },
+            { id: 5, url: "https://images.unsplash.com/photo-1578271887552-5ac3a72752bc?q=80&w=1000&auto=format&fit=crop", caption: "滑雪場" },
+        ];
 
-        const cityBadges = {
-          Sapporo: "❄️ 札幌",
-          Otaru: "🌊 小樽",
-          Shiraoi: "♨️ 白老",
-          Chitose: "✈️ 千歲",
+        const cityColors = { Sapporo: "bg-blue-100 text-blue-800 border-blue-200", Otaru: "bg-cyan-100 text-cyan-800 border-cyan-200", Shiraoi: "bg-stone-100 text-stone-800 border-stone-200", Chitose: "bg-slate-100 text-slate-800 border-slate-200" };
+        const cityBadges = { Sapporo: "❄️ 札幌", Otaru: "🌊 小樽", Shiraoi: "♨️ 白老", Chitose: "✈️ 千歲" };
+
+        // --- Gallery Modal Component ---
+        const GalleryModal = ({ photos, isOpen, onClose }) => {
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [touchStart, setTouchStart] = useState(null);
+            const [touchEnd, setTouchEnd] = useState(null);
+
+            // Reset index when opening
+            useEffect(() => { if (isOpen) setCurrentIndex(0); }, [isOpen]);
+
+            if (!isOpen) return null;
+
+            // Touch Handlers for Swipe
+            const minSwipeDistance = 50;
+            const onTouchStart = (e) => { setTouchEnd(null); setTouchStart(e.targetTouches[0].clientX); }
+            const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+            const onTouchEnd = () => {
+                if (!touchStart || !touchEnd) return;
+                const distance = touchStart - touchEnd;
+                const isLeftSwipe = distance > minSwipeDistance;
+                const isRightSwipe = distance < -minSwipeDistance;
+                if (isLeftSwipe) nextPhoto();
+                if (isRightSwipe) prevPhoto();
+            }
+
+            const nextPhoto = () => {
+                if (currentIndex < photos.length - 1) setCurrentIndex(curr => curr + 1);
+            }
+            const prevPhoto = () => {
+                if (currentIndex > 0) setCurrentIndex(curr => curr - 1);
+            }
+
+            return (
+                <div className="fixed inset-0 z-[60] bg-black text-white flex flex-col animate-fadeIn">
+                    {/* Top Bar */}
+                    <div className="flex justify-between items-center p-4 bg-black/50 backdrop-blur-md absolute top-0 w-full z-10 safe-pt">
+                        <span className="font-bold text-sm">{currentIndex + 1} / {photos.length}</span>
+                        <button onClick={onClose} className="p-2 rounded-full bg-white/20 hover:bg-white/30"><XIcon className="w-6 h-6" /></button>
+                    </div>
+
+                    {/* Main Image Area */}
+                    <div 
+                        className="flex-1 flex items-center justify-center relative overflow-hidden"
+                        onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
+                    >
+                        <div className="relative w-full h-full flex items-center justify-center">
+                            <img 
+                                src={photos[currentIndex].url} 
+                                alt={photos[currentIndex].caption} 
+                                className="max-h-full max-w-full object-contain transition-opacity duration-300"
+                            />
+                        </div>
+                        
+                        {/* Navigation Arrows (Visible on larger screens or non-touch) */}
+                        <button onClick={prevPhoto} className={`absolute left-2 p-3 bg-black/30 rounded-full text-white ${currentIndex === 0 ? 'opacity-30' : 'opacity-100'}`} disabled={currentIndex === 0}><ChevronLeft className="w-8 h-8" /></button>
+                        <button onClick={nextPhoto} className={`absolute right-2 p-3 bg-black/30 rounded-full text-white ${currentIndex === photos.length - 1 ? 'opacity-30' : 'opacity-100'}`} disabled={currentIndex === photos.length - 1}><ChevronRight className="w-8 h-8" /></button>
+                    </div>
+
+                    {/* Caption */}
+                    <div className="p-6 bg-gradient-to-t from-black via-black/80 to-transparent pb-12 safe-pb absolute bottom-0 w-full">
+                        <p className="text-center font-bold text-lg">{photos[currentIndex].caption}</p>
+                    </div>
+                </div>
+            );
         };
 
         function HokkaidoTripApp() {
@@ -206,6 +169,7 @@
           const [exchangeRate, setExchangeRate] = useState(0.215);
           const [showSettings, setShowSettings] = useState(false);
           const [showShopping, setShowShopping] = useState(false);
+          const [showGallery, setShowGallery] = useState(false); // Gallery State
           const [shoppingList, setShoppingList] = useState([]);
           const [newItemName, setNewItemName] = useState("");
           const [calcAmount, setCalcAmount] = useState("");
@@ -227,9 +191,7 @@
             setShowExpenseInput(null);
           };
 
-          const getTotalCost = () => {
-            return Object.values(expenses).reduce((a, b) => a + b, 0);
-          };
+          const getTotalCost = () => Object.values(expenses).reduce((a, b) => a + b, 0);
 
           const getDaysUntilTrip = () => {
               const today = new Date();
@@ -239,7 +201,6 @@
               return diffDays > 0 ? diffDays : 0;
           };
 
-          // Shopping List Logic
           const addShoppingItem = () => {
             if (!newItemName.trim()) return;
             const updatedList = [...shoppingList, { id: Date.now(), text: newItemName, checked: false }];
@@ -249,9 +210,7 @@
           };
 
           const toggleShoppingItem = (id) => {
-            const updatedList = shoppingList.map(item => 
-                item.id === id ? { ...item, checked: !item.checked } : item
-            );
+            const updatedList = shoppingList.map(item => item.id === id ? { ...item, checked: !item.checked } : item);
             setShoppingList(updatedList);
             localStorage.setItem('hokkaido_shopping_list_2025', JSON.stringify(updatedList));
           };
@@ -262,9 +221,7 @@
             localStorage.setItem('hokkaido_shopping_list_2025', JSON.stringify(updatedList));
           };
 
-          const filteredData = filterCity === 'All' 
-            ? itineraryData 
-            : itineraryData.filter(item => item.city === filterCity);
+          const filteredData = filterCity === 'All' ? itineraryData : itineraryData.filter(item => item.city === filterCity);
 
           const scrollToDate = (date) => {
             const element = document.getElementById(`date-${date}`);
@@ -381,7 +338,6 @@
                                 {activity.notes && <div className="bg-slate-50 rounded-lg p-2.5 mt-2"><p className="text-xs text-slate-600 font-medium leading-relaxed">{activity.notes}</p></div>}
                             </div>
 
-                            {/* Expense Section */}
                             <div className="mt-3 pt-3 border-t border-slate-50 flex items-center justify-between">
                                 {showExpenseInput === activity.id ? (
                                     <div className="flex items-center gap-2 w-full animate-fadeIn">
@@ -401,10 +357,7 @@
                                         <div className="text-sm font-bold text-slate-700">
                                             {expenses[activity.id] ? `¥${expenses[activity.id].toLocaleString()}` : <span className="text-slate-300 text-xs">未記帳</span>}
                                         </div>
-                                        <button 
-                                            onClick={() => setShowExpenseInput(activity.id)}
-                                            className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 transition-colors"
-                                        >
+                                        <button onClick={() => setShowExpenseInput(activity.id)} className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 transition-colors">
                                             <MoneyIcon className="w-4 h-4" />
                                         </button>
                                     </div>
@@ -418,7 +371,7 @@
                 ))}
               </div>
 
-              {/* Total Budget Footer */}
+              {/* Footer Bar */}
               <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-4 pb-8 z-40 safe-pb shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
                   <div className="max-w-md mx-auto flex justify-between items-center gap-2">
                       <div className="flex-1">
@@ -431,16 +384,13 @@
                           </div>
                       </div>
                       <div className="flex gap-2">
-                        <button 
-                            onClick={() => setShowShopping(true)}
-                            className="bg-orange-50 p-3 rounded-full text-orange-600 hover:bg-orange-100 transition-colors shadow-sm"
-                        >
+                        <button onClick={() => setShowGallery(true)} className="bg-purple-50 p-3 rounded-full text-purple-600 hover:bg-purple-100 transition-colors shadow-sm">
+                            <PhotoIcon className="w-6 h-6" />
+                        </button>
+                        <button onClick={() => setShowShopping(true)} className="bg-orange-50 p-3 rounded-full text-orange-600 hover:bg-orange-100 transition-colors shadow-sm">
                             <ShoppingBagIcon className="w-6 h-6" />
                         </button>
-                        <button 
-                            onClick={() => setShowSettings(true)}
-                            className="bg-slate-100 p-3 rounded-full text-slate-600 hover:bg-slate-200 transition-colors shadow-sm"
-                        >
+                        <button onClick={() => setShowSettings(true)} className="bg-slate-100 p-3 rounded-full text-slate-600 hover:bg-slate-200 transition-colors shadow-sm">
                             <SettingsIcon className="w-6 h-6" />
                         </button>
                       </div>
@@ -452,63 +402,33 @@
                 <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn" onClick={() => setShowShopping(false)}>
                     <div className="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
                         <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-4 shrink-0">
-                            <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                                <ShoppingBagIcon className="w-5 h-5 text-orange-500" />
-                                購物助手
-                            </h3>
+                            <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2"><ShoppingBagIcon className="w-5 h-5 text-orange-500" />購物助手</h3>
                             <button onClick={() => setShowShopping(false)} className="text-slate-400 hover:text-slate-600">✕</button>
                         </div>
-
-                        {/* Quick Converter */}
                         <div className="bg-orange-50 rounded-xl p-4 mb-6 shrink-0">
                             <label className="block text-xs font-bold text-orange-600/70 uppercase tracking-wider mb-2">快速換算 (匯率 {exchangeRate})</label>
                             <div className="flex items-center gap-3">
                                 <span className="text-orange-900 font-bold">¥</span>
-                                <input 
-                                    type="number" 
-                                    placeholder="輸入日幣..."
-                                    value={calcAmount}
-                                    onChange={(e) => setCalcAmount(e.target.value)}
-                                    className="bg-white/50 w-full rounded-lg px-2 py-1 outline-none text-lg font-bold text-orange-900 placeholder:text-orange-900/30"
-                                />
+                                <input type="number" placeholder="輸入日幣..." value={calcAmount} onChange={(e) => setCalcAmount(e.target.value)} className="bg-white/50 w-full rounded-lg px-2 py-1 outline-none text-lg font-bold text-orange-900 placeholder:text-orange-900/30" />
                             </div>
-                            <div className="text-right mt-1 font-bold text-orange-700 text-sm">
-                                ≈ NT$ {calcAmount ? (parseFloat(calcAmount) * exchangeRate).toLocaleString(undefined, {maximumFractionDigits:0}) : '0'}
-                            </div>
+                            <div className="text-right mt-1 font-bold text-orange-700 text-sm">≈ NT$ {calcAmount ? (parseFloat(calcAmount) * exchangeRate).toLocaleString(undefined, {maximumFractionDigits:0}) : '0'}</div>
                         </div>
-
-                        {/* Checklist */}
                         <div className="flex-1 overflow-y-auto no-scrollbar">
                             <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">必買清單</label>
                             <div className="flex gap-2 mb-4">
-                                <input 
-                                    type="text" 
-                                    value={newItemName}
-                                    onChange={(e) => setNewItemName(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && addShoppingItem()}
-                                    placeholder="新增項目 (例: EVE止痛藥)"
-                                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-orange-500"
-                                />
-                                <button onClick={addShoppingItem} className="bg-orange-500 text-white p-2 rounded-xl hover:bg-orange-600 transition-colors">
-                                    <PlusIcon className="w-5 h-5" />
-                                </button>
+                                <input type="text" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addShoppingItem()} placeholder="新增項目 (例: EVE止痛藥)" className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-orange-500" />
+                                <button onClick={addShoppingItem} className="bg-orange-500 text-white p-2 rounded-xl hover:bg-orange-600 transition-colors"><PlusIcon className="w-5 h-5" /></button>
                             </div>
                             <div className="space-y-2">
-                                {shoppingList.length === 0 && (
-                                    <div className="text-center text-slate-300 text-sm py-8">還沒有想買的東西嗎？</div>
-                                )}
+                                {shoppingList.length === 0 && <div className="text-center text-slate-300 text-sm py-8">還沒有想買的東西嗎？</div>}
                                 {shoppingList.map(item => (
                                     <div key={item.id} className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-transparent hover:border-slate-200 transition-all">
                                         <label className="checkbox-wrapper relative flex items-center cursor-pointer">
                                             <input type="checkbox" checked={item.checked} onChange={() => toggleShoppingItem(item.id)} className="peer sr-only" />
-                                            <div className="w-5 h-5 border-2 border-slate-300 rounded-md peer-checked:bg-orange-500 peer-checked:border-orange-500 transition-all flex items-center justify-center">
-                                                <CheckIcon className="w-3 h-3 text-white hidden" />
-                                            </div>
+                                            <div className="w-5 h-5 border-2 border-slate-300 rounded-md peer-checked:bg-orange-500 peer-checked:border-orange-500 transition-all flex items-center justify-center"><CheckIcon className="w-3 h-3 text-white hidden" /></div>
                                         </label>
                                         <span className={`flex-1 text-sm font-medium ${item.checked ? 'text-slate-400 line-through' : 'text-slate-700'}`}>{item.text}</span>
-                                        <button onClick={() => deleteShoppingItem(item.id)} className="text-slate-300 hover:text-red-400 transition-colors">
-                                            <TrashIcon className="w-4 h-4" />
-                                        </button>
+                                        <button onClick={() => deleteShoppingItem(item.id)} className="text-slate-300 hover:text-red-400 transition-colors"><TrashIcon className="w-4 h-4" /></button>
                                     </div>
                                 ))}
                             </div>
@@ -521,72 +441,33 @@
               {showSettings && (
                 <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn" onClick={() => setShowSettings(false)}>
                     <div className="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-6" onClick={e => e.stopPropagation()}>
-                        <div className="flex justify-between items-center border-b border-slate-100 pb-4">
-                            <h3 className="text-lg font-bold text-slate-800">工具箱</h3>
-                            <button onClick={() => setShowSettings(false)} className="text-slate-400 hover:text-slate-600">✕</button>
-                        </div>
-                        
-                        {/* Currency Setting */}
+                        <div className="flex justify-between items-center border-b border-slate-100 pb-4"><h3 className="text-lg font-bold text-slate-800">工具箱</h3><button onClick={() => setShowSettings(false)} className="text-slate-400 hover:text-slate-600">✕</button></div>
                         <div>
                             <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">匯率設定 (JPY -> TWD)</label>
                             <div className="flex items-center gap-2 bg-slate-50 rounded-xl px-4 py-3 border border-slate-200">
                                 <span className="text-slate-400 font-bold">0.</span>
-                                <input 
-                                    type="number" 
-                                    value={exchangeRate.toString().replace('0.', '')}
-                                    onChange={(e) => {
-                                        const val = parseFloat('0.' + e.target.value);
-                                        setExchangeRate(val);
-                                        localStorage.setItem('hokkaido_exchange_rate_2025', val);
-                                    }}
-                                    className="bg-transparent w-full outline-none font-bold text-slate-700"
-                                    placeholder="215"
-                                />
+                                <input type="number" value={exchangeRate.toString().replace('0.', '')} onChange={(e) => { const val = parseFloat('0.' + e.target.value); setExchangeRate(val); localStorage.setItem('hokkaido_exchange_rate_2025', val); }} className="bg-transparent w-full outline-none font-bold text-slate-700" placeholder="215" />
                             </div>
                             <p className="text-xs text-slate-400 mt-2 text-right">目前匯率: {exchangeRate}</p>
                         </div>
-
-                        {/* Useful Links */}
                         <div>
                             <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">自駕必備連結</label>
                             <div className="grid grid-cols-2 gap-3">
-                                <a href="https://www.jma.go.jp/bosai/snow/" target="_blank" className="flex flex-col items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 p-4 rounded-xl text-blue-700 transition-colors">
-                                    <Snowflake className="w-6 h-6" />
-                                    <span className="text-xs font-bold">降雪預報</span>
-                                </a>
-                                <a href="https://info-road.hdb.hkd.mlit.go.jp/RoadInfo/index.htm" target="_blank" className="flex flex-col items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 p-4 rounded-xl text-slate-700 transition-colors">
-                                    <Car className="w-6 h-6" />
-                                    <span className="text-xs font-bold">即時路況</span>
-                                </a>
-                                <a href="https://mapcode.com/en/" target="_blank" className="flex flex-col items-center justify-center gap-2 bg-orange-50 hover:bg-orange-100 p-4 rounded-xl text-orange-700 transition-colors">
-                                    <MapPin className="w-6 h-6" />
-                                    <span className="text-xs font-bold">MapCode</span>
-                                </a>
-                                <button onClick={() => {
-                                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(expenses));
-                                    const downloadAnchorNode = document.createElement('a');
-                                    downloadAnchorNode.setAttribute("href",     dataStr);
-                                    downloadAnchorNode.setAttribute("download", "expenses_backup.json");
-                                    document.body.appendChild(downloadAnchorNode);
-                                    downloadAnchorNode.click();
-                                    downloadAnchorNode.remove();
-                                }} className="flex flex-col items-center justify-center gap-2 bg-green-50 hover:bg-green-100 p-4 rounded-xl text-green-700 transition-colors">
-                                    <ExternalLink className="w-6 h-6" />
-                                    <span className="text-xs font-bold">備份記帳</span>
-                                </button>
+                                <a href="https://www.jma.go.jp/bosai/snow/" target="_blank" className="flex flex-col items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 p-4 rounded-xl text-blue-700 transition-colors"><Snowflake className="w-6 h-6" /><span className="text-xs font-bold">降雪預報</span></a>
+                                <a href="https://info-road.hdb.hkd.mlit.go.jp/RoadInfo/index.htm" target="_blank" className="flex flex-col items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 p-4 rounded-xl text-slate-700 transition-colors"><Car className="w-6 h-6" /><span className="text-xs font-bold">即時路況</span></a>
+                                <a href="https://mapcode.com/en/" target="_blank" className="flex flex-col items-center justify-center gap-2 bg-orange-50 hover:bg-orange-100 p-4 rounded-xl text-orange-700 transition-colors"><MapPin className="w-6 h-6" /><span className="text-xs font-bold">MapCode</span></a>
+                                <button onClick={() => { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(expenses)); const downloadAnchorNode = document.createElement('a'); downloadAnchorNode.setAttribute("href", dataStr); downloadAnchorNode.setAttribute("download", "expenses_backup.json"); document.body.appendChild(downloadAnchorNode); downloadAnchorNode.click(); downloadAnchorNode.remove(); }} className="flex flex-col items-center justify-center gap-2 bg-green-50 hover:bg-green-100 p-4 rounded-xl text-green-700 transition-colors"><ExternalLink className="w-6 h-6" /><span className="text-xs font-bold">備份記帳</span></button>
                             </div>
                         </div>
                     </div>
                 </div>
               )}
 
+              {/* Gallery Modal */}
+              <GalleryModal photos={photoGallery} isOpen={showGallery} onClose={() => setShowGallery(false)} />
+
               {/* FAB */}
-              <button 
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="fixed bottom-24 right-6 bg-slate-900/90 text-white p-3.5 rounded-full shadow-xl hover:bg-black transition-all z-40 active:scale-90 backdrop-blur-sm safe-pb"
-              >
-                <ArrowLeft className="w-6 h-6 rotate-90" />
-              </button>
+              <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-24 right-6 bg-slate-900/90 text-white p-3.5 rounded-full shadow-xl hover:bg-black transition-all z-40 active:scale-90 backdrop-blur-sm safe-pb"><ArrowLeft className="w-6 h-6 rotate-90" /></button>
             </div>
           );
         }
